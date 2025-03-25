@@ -1,11 +1,17 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import HomePage from "./views/HomePage";
+
 
 function App() {
-	
+	const router = createBrowserRouter([
+		{
+			path: '',
+			element: <HomePage />,
+		},
+	]);
 
 	return (
-	  <div className="min-h-screen flex items-center justify-center bg-white">
-		Hi! I'm KayO
-	  </div>
+		<RouterProvider router={router} />
 	);
 }
 
