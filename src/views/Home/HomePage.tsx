@@ -1,5 +1,5 @@
 import { IoMdSunny } from "react-icons/io";
-import { useTheme } from "../utils/ThemeContext";
+import { useTheme } from "@/utils/ThemeContext";
 import { FaMoon } from "react-icons/fa";
 
 
