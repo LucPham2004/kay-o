@@ -1,6 +1,7 @@
 import { IoMdSunny } from "react-icons/io";
 import { useTheme } from "@/utils/ThemeContext";
 import { FaMoon } from "react-icons/fa";
+import Sidebar from "@/components/common/Sidebar";
 
 
 
@@ -8,8 +9,10 @@ const HomePage = () => {
     const { isDarkMode, toggleDarkMode } = useTheme();
 
     return (
-        <div className={`min-h-screen flex flex-col gap-4 items-center justify-center bg-white
-            ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
+        <div className={`min-h-screen flex gap-4 items-center justify-start
+            ${isDarkMode ? 'bg-[#292A2D] text-white' : 'bg-white text-black'}`}>
+
+            <Sidebar/>
             <h1>Hi! I'm KayO</h1>
             <div className="flex flex-col items-center gap-2">
                 <button className={` rounded-lg 

@@ -1,0 +1,114 @@
+import { BsPencilSquare } from "react-icons/bs";
+import '../../styles/scrollbar.css';
+import { useState } from "react";
+import { FaMoon } from "react-icons/fa";
+import { useTheme } from "@/utils/ThemeContext";
+import SearchBar from "./SearchBar";
+import Modal from "./Modal";
+
+const Sidebar = () => {
+    const { isDarkMode, toggleDarkMode } = useTheme();
+
+    const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
+    const [searchedConversations, setSearchedConversations] = useState<[] | null>(null);
+
+
+    const handleConversationSearch = async () => {
+
+    };
+
+    const handleClearSearch = () => {
+        setSearchedConversations(null);
+    };
+
+    return (
+        <div className={`min-h-[100vh] max-h-[100vh] overflow-hidden w-[300px] flex flex-col items-center 
+                p-2 pb-0 pe-1 rounded-l-xl border shadow-sm
+                ${isDarkMode ? 'bg-[#1F1F1F] text-gray-300 border-gray-900' : 'bg-white text-black border-gray-200'}`}>
+
+            <div className="flex flex-row items-center p-2 py-0 pe-4 self-start w-full mb-2">
+                <div className={`flex self-start items-center gap-2 text-xl font-bold text-left w-[45%]
+                        ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                    <img src="/kayo.webp" className="w-6 h-6 rounded-full"></img>
+                    <p>KayO</p>
+                </div>
+                <div className="relative flex flex-row gap-4 items-center justify-end w-[55%]">
+                    {/* <button onClick={() => setIsNewChatModalOpen(true)}
+                        className={`p-2 rounded-full text-xl 
+                            ${isDarkMode ? 'text-white bg-[#474747] hover:bg-[#5A5A5A]'
+                                : 'text-black bg-gray-100 hover:bg-gray-200'}`}>
+                        <BsPencilSquare />
+                    </button> */}
+
+                </div>
+            </div>
+
+            <div className="flex flex-col items-center w-full h-fit p-2 pe-4">
+                <SearchBar placeholder="Tìm kiếm hội thoại..." onSearch={handleConversationSearch} onClear={handleClearSearch} />
+            </div>
+
+            <div className={`flex flex-col items-center w-full h-fit p-2 pe-4`}>
+                <button className={`flex items-center justify-center gap-2 p-2 rounded-lg w-full border 
+                        ${isDarkMode ? 'text-[#7295F6] border-[#7295F6] hover:bg-[#0f1421] hover:text-[#d3defc]'
+                            : 'text-[#5680f5] border-[#4170f0] hover:bg-gray-100'}`}>
+                    <BsPencilSquare className="text-lg"/>
+                    <p className="text-sm">New Chat</p>
+                </button>
+                <hr className={`w-full mt-4 ${isDarkMode ? 'h-[1px] bg-gray-400' : 'h-[1.5px] bg-gray-600'}`}></hr>
+            </div>
+
+            
+            {searchedConversations && searchedConversations?.length > 0 && (
+                <></>
+            )}
+
+
+
+            {/* Settings Modal */}
+            <Modal isOpen={isSettingModalOpen} onClose={() => setIsSettingModalOpen(false)}>
+                <h2 className="text-lg font-bold mb-3">Tuỳ chỉnh</h2>
+                <div className="flex flex-col items-start justify-start gap-4 w-full">
+                    <div className="flex items-center justify-start gap-2">
+                        <div className={`rounded-full p-2 text-xl ${isDarkMode ? 'bg-[#474747]' : 'bg-gray-100'}`}>
+                            <FaMoon />
+                        </div>
+                        <div className="flex flex-col items-start justify-start">
+                            <p className="text-md font-semibold">Chế độ tối</p>
+                            <p className={`text-xs ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                Điều chỉnh giao diện của ChitChat để giảm độ chói và cho đôi mắt được nghỉ ngơi.
+                            </p>
+                        </div>
+                    </div>
+                    <div className='flex flex-col items-center gap-2 w-full'>
+                        <label className={`flex gap-2 w-full rounded-lg p-2 ps-10 items-center justify-between 
+                                ${isDarkMode ? 'hover:bg-[#474747]' : 'hover:bg-gray-200'} cursor-pointer`}
+                            onClick={() => toggleDarkMode}>
+                            <p>Đang tắt</p>
+                            <div className={`flex items-center rounded-full p-2 cursor-pointer
+                                    ${isDarkMode ? 'text-white hover:bg-[#5A5A5A]' : 'text-black hover:bg-gray-200'}`}>
+                                <input type="radio" name="darkmode" value="on" className="w-6 h-6 cursor-pointer"
+                                    checked={isDarkMode === false}
+                                    onChange={() => toggleDarkMode()} />
+                            </div>
+                        </label>
+                        <label className={`flex gap-2 w-full rounded-lg p-2 ps-10 items-center justify-between 
+                                ${isDarkMode ? 'hover:bg-[#474747]' : 'hover:bg-gray-200'} cursor-pointer`}
+                            onClick={() => toggleDarkMode}>
+                            <p>Đang bật</p>
+                            <div className={`flex items-center rounded-full p-2 cursor-pointer
+                                    ${isDarkMode ? 'text-white hover:bg-[#5A5A5A]' : 'text-black hover:bg-gray-200'} `}>
+                                <input type="radio" name="darkmode" value="off" className="w-6 h-6 cursor-pointer"
+                                    checked={isDarkMode === true}
+                                    onChange={() => toggleDarkMode()} />
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </Modal>
+
+        </div>
+    );
+}
+
+export default Sidebar;
+
