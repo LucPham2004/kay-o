@@ -48,14 +48,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
 				value={keyword}
 				onChange={(e) => setKeyword(e.target.value)}
 				placeholder={placeholder}
-				className={`flex-grow ps-2 pe-4 py-1 focus:outline-none
+				className={`flex-grow ps-2 pe-4 pt-1.5 pb-2 focus:outline-none text-sm
 					${isDarkMode ? 'bg-[#3A3B3C] border-gray-900 text-gray-100'
 						: 'bg-gray-100 border-gray-200 text-gray-700'}
 				`} />
 			{keyword.length > 0 && (
 				<button
 					type="button"
-					className="py-1 pe-1 rounded-full text-xl "
+					className="py-1 pe-1 rounded-full text-lg "
 					onClick={handleClearInput}
 				>
 					<IoMdClose /> 
