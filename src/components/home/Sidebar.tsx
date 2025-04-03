@@ -7,6 +7,7 @@ import SearchBar from "../common/SearchBar";
 import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
 import dayjs from "dayjs";
+import { IoMdSunny } from "react-icons/io";
 
 
 export interface Conversation {
@@ -91,7 +92,12 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
                                 : 'text-black bg-gray-100 hover:bg-gray-200'}`}>
                         <BsPencilSquare />
                     </button> */}
-
+                    <button className={` rounded-lg text-xl p-2
+                        ${isDarkMode ? 'text-yellow-400 hover:bg-[#5A5A5A]'
+                            : 'text-yellow-400 hover:bg-gray-200'}`}
+                        onClick={toggleDarkMode}>
+                        {isDarkMode ? <IoMdSunny /> : <FaMoon />}
+                    </button>
                 </div>
             </div>
 

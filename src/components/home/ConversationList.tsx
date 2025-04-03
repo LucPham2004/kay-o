@@ -45,13 +45,13 @@ const ConversationList: React.FC<Props> = ({
 
 
     return (
-        <div className={`w-full max-w-md rounded-lg p-2 overflow-y-auto mb-4
-            ${conversations.length > 8 ? 'pe-2' : 'pe-4'}`}>
+        <div className={`w-full max-w-md rounded-lg p-2 pt-1 overflow-y-auto mb-4
+            ${conversations.length > 10 ? 'pe-2' : 'pe-4'}`}>
 
             {Object.entries(grouped).map(([group, items]) => (
                 items.length > 0 && (
-            <div key={group}>
-                <h3 className={`text-[13px] font-semibold ms-2 mt-4 mb-2
+            <div key={group} className={`${group != 'today' ? 'mt-4' : ''}`}>
+                <h3 className={`text-[13px] font-semibold ms-2 mb-2
                     ${isDarkMode ? 'text-gray-100' : 'text-gray-700'}`}>
                     {group === "today"
                         ? "Today"
