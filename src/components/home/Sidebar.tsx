@@ -75,7 +75,7 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
     };
 
     return (
-        <div className={`min-h-[100vh] max-h-[100vh] overflow-hidden w-[280px] flex flex-col items-center 
+        <div className={`min-h-[100vh] max-h-[100vh] overflow-hidden min-w-[280px] flex flex-col items-center 
                 p-2 pb-0 pe-1 rounded-l-xl shadow-sm
                 ${isDarkMode ? 'bg-[#1F1F1F] text-gray-300'
                 : 'bg-[#F9F9F9] text-black'}`}>

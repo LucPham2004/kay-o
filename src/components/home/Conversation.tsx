@@ -14,12 +14,12 @@ const Conversation = () => {
         <div className={`max-h-[90vh] min-h-[90vh] w-full flex flex-col items-center justify-between
             ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}>
             
-            <div className={`max-h-[80vh] min-h-[70vh] w-full flex justify-center overflow-y-auto`}>
+            <div className={`max-h-[80vh] min-h-[60vh] w-full flex justify-center overflow-y-auto`}>
                 <ChatUI />
             </div>
             
             {/* Chat Input */}
-            <div className={`w-full max-w-2xl rounded-l-xl rounded-r-[20px] flex items-end justify-center gap-2 mb-4
+            <div className={`w-full max-w-3xl rounded-l-xl rounded-r-[20px] flex items-end justify-center gap-2 mb-4
                     ${isDarkMode ? 'bg-[#303030]' : 'shadow-xl border border-gray-200'}`}>
                 <textarea
                     className={`flex-grow w-full rounded-[20px] px-4 pt-2 pb-2.5 text-[14px] resize-none 

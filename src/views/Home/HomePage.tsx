@@ -15,16 +15,19 @@ const HomePage = () => {
     };
 
     return (
-        <div className={`min-h-screen flex items-center justify-start
-            ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}
-            // close menu when click outside
-            onClick={() => setOpenMenuId(null)}> 
+        <div className={`min-h-screen w-full flex items-center justify-center
+            ${isDarkMode ? 'bg-[#232425]' : 'bg-white'}`}>
+            <div className={`min-h-screen w-full max-w-[2560px] flex items-center justify-start
+                ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}
+                // close menu when click outside
+                onClick={() => setOpenMenuId(null)}> 
 
-            <Sidebar openMenuId={openMenuId} onMenuToggle={handleMenuToggle} />
-            
-            <div className="flex flex-col items-center justify-start h-full w-[1248px]">
-                <Header />
-                <Outlet/>
+                <Sidebar openMenuId={openMenuId} onMenuToggle={handleMenuToggle} />
+                
+                <div className="flex flex-col items-center justify-start h-full w-full">
+                    <Header />
+                    <Outlet/>
+                </div>
             </div>
         </div>
     );
