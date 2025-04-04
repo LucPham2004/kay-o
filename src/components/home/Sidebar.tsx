@@ -8,6 +8,7 @@ import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
 import dayjs from "dayjs";
 import { IoMdSunny } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 
 export interface Conversation {
@@ -106,12 +107,14 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
             </div>
 
             <div className={`flex flex-col items-center w-full h-fit p-2 pe-4`}>
-                <button className={`flex items-center justify-center gap-2 p-2 rounded-lg w-full border 
-                        ${isDarkMode ? 'text-[#7295F6] border-[#7295F6] hover:bg-[#1e2129] hover:text-[#d3defc]'
-                        : 'text-[#5680f5] border-[#4170f0] hover:bg-blue-50'}`}>
-                    <BsPencilSquare className="text-lg" />
-                    <p className="text-sm">New Chat</p>
-                </button>
+                <Link to={`/`} className="w-full">
+                    <button className={`flex items-center justify-center gap-2 p-2 rounded-lg w-full border 
+                            ${isDarkMode ? 'text-[#7295F6] border-[#7295F6] hover:bg-[#1e2129] hover:text-[#d3defc]'
+                            : 'text-[#5680f5] border-[#4170f0] hover:bg-blue-50'}`}>
+                        <BsPencilSquare className="text-lg" />
+                        <p className="text-sm">New Chat</p>
+                    </button>
+                </Link>
                 <hr className={`w-full mt-4 ${isDarkMode ? 'h-[1px] bg-gray-400' : 'h-[1.5px] bg-gray-600'}`}></hr>
             </div>
 

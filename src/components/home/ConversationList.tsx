@@ -7,6 +7,7 @@ import isYesterday from "dayjs/plugin/isYesterday";
 import React from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { Conversation } from "./Sidebar";
+import { Link } from "react-router-dom";
 
 dayjs.extend(relativeTime);
 dayjs.extend(isToday);
@@ -54,19 +55,19 @@ const ConversationList: React.FC<Props> = ({
                 <h3 className={`text-[13px] font-semibold ms-2 mb-2
                     ${isDarkMode ? 'text-gray-100' : 'text-gray-700'}`}>
                     {group === "today"
-                        ? "Today"
+                        ? "Hôm nay"
                         : group === "yesterday"
-                        ? "Yesterday"
+                        ? "Hôm qua"
                         : group === "previous7Days"
-                        ? "Previous 7 days"
+                        ? "Trong vòng 7 ngày"
                         : group === "previous30Days"
-                        ? "Previous 30 days"
-                        : "Long time ago"}
+                        ? "Trong 30 ngày"
+                        : "Trên 30 ngày"}
                 </h3>
                 <ul>
                     {items.map((conversation) => (
+                        <Link to={`/c/${conversation.id}`} key={conversation.id}>
                         <li
-                            key={conversation.id}
                             className={`relative flex justify-between items-center p-2 rounded-lg cursor-pointer transition group
                             ${isDarkMode ? 'hover:bg-[#3F3F3F]' : 'hover:bg-gray-200'}`}
                         >
@@ -111,6 +112,7 @@ const ConversationList: React.FC<Props> = ({
                                 </div>
                             )}
                         </li>
+                        </Link>
                     ))}
                 </ul>
             </div>

@@ -13,7 +13,8 @@ const Home = () => {
     return (
         <div className={`max-h-[90vh] min-h-[90vh] w-full flex flex-col items-center justify-center gap-4
             ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}>
-
+            <p className={`text-3xl mb-2 font-medium
+                ${isDarkMode ? 'text-white' : 'text-black'}`}>Tôi có thể giúp gì cho bạn?</p>
             <div className="flex flex-col justify-center items-center mb-8">
                 <div className="flex gap-6">
                     {/* Card 1 */}
@@ -25,7 +26,7 @@ const Home = () => {
                                 <span className="bg-pink-500 text-white px-2 py-1 rounded-full text-xs">Llama 3.3</span>
                             </div>
                             <p className="text-sm">
-                                Try the recently added open-source Mistral Small 3 and Llama 3.3
+                                Blah blah blah blah blah Blah blah blah blsdfdsah blah Blah blah blah blah blah
                             </p>
                         </div>
                     </div>
@@ -36,7 +37,7 @@ const Home = () => {
                         <div className="flex flex-col items-center text-center">
                             <IoShieldCheckmarkSharp className="text-green-400 mb-2" size={32} />
                             <p className="text-sm">
-                                Your chats are private, and are never saved or used to train AI models
+                                Cuộc trò chuyện của bạn là riêng tư và sẽ không được lưu hoặc dùng để đào tạo các mô hình AI
                             </p>
                         </div>
                     </div>
@@ -47,24 +48,26 @@ const Home = () => {
             <div className="flex flex-col justify-center items-center w-full">
                 {/* Buttons */}
                 <div className="flex gap-4 mb-4">
-                    <button className={`flex w-[376px] items-center gap-2 px-4 py-2 rounded-lg shadow
+                    <button className={`flex w-[328px] items-center gap-2 px-4 py-2 rounded-lg shadow
                         ${isDarkMode ? 'bg-[#303030] text-gray-200' : 'bg-gray-200 text-gray-600'}`}>
-                        <span className="text-xl">➤</span> <span className="font-semibold">Lên kế hoạch cho một chuyến du lịch!</span>
+                        <span className="text-xl">➤</span> 
+                        <span className="text-sm font-semibold">Lên kế hoạch cho một chuyến du lịch!</span>
                     </button>
-                    <button className={`flex w-[376px] items-center gap-2 px-4 py-2 rounded-lg shadow
+                    <button className={`flex w-[328px] items-center gap-2 px-4 py-2 rounded-lg shadow
                         ${isDarkMode ? 'bg-[#303030] text-gray-200' : 'bg-gray-200 text-gray-600'}`}>
-                        <span className="text-xl">➤</span> <span className="font-semibold">Lộ trình học tập</span>
+                        <span className="text-xl">➤</span> 
+                        <span className="text-sm font-semibold">Lộ trình học tập, nghiên cứu</span>
                     </button>
                 </div>
 
                 {/* Chat Input */}
-                <div className={`w-full max-w-3xl rounded-l-xl rounded-r-[20px] flex items-end justify-center gap-2
-                    ${isDarkMode ? 'bg-[#303030]' : 'bg-gray-200'}`}>
+                <div className={`w-full max-w-2xl rounded-l-xl rounded-r-[20px] flex items-end justify-center gap-2
+                    ${isDarkMode ? 'bg-[#303030]' : 'shadow-xl border border-gray-200'}`}>
                     <textarea
                         className={`flex-grow w-full rounded-[20px] px-4 py-2 text-[14px] resize-none 
                             overflow-y-auto focus:outline-none bg-transparent
                             ${isDarkMode ? 'text-gray-200' : 'text-black'}`}
-                        placeholder="Aa"
+                        placeholder="Hỏi bất cứ thứ gì"
                         value={message}
                         rows={1}
                         style={{ lineHeight: '1.5', maxHeight: 'calc(1.5em * 6.5 + 0.5rem)', minHeight: '1.5em' }}
