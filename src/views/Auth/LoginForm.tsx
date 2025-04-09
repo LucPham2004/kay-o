@@ -146,16 +146,16 @@ const Login = () => {
 
         <div className="text-center text-sm space-y-2">
           <p>
-            <a
-              href="#"
-              className={`${
+            <span
+              onClick={() => navigate(routes.FORGOT_PASSWORD)}
+              className={`cursor-pointer ${
                 isDarkMode
                   ? 'text-blue-400 hover:text-blue-300'
                   : 'text-blue-600 hover:text-blue-500'
               }`}
             >
               Quên mật khẩu?
-            </a>
+            </span>
           </p>
           <p>
             Chưa có tài khoản?{' '}

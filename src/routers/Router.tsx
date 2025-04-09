@@ -5,6 +5,7 @@ import HomePage from '@/views/Home/HomePage'
 import NotFound from '@/views/404/NotFound'
 import Home from '@/components/home/Home'
 import Conversation from '@/components/home/Conversation'
+import ForgotPasswordForm from '@/views/Auth/ForgotPasswordForm'
 const Router = () => {
   return (
     <BrowserRouter>
@@ -15,6 +16,7 @@ const Router = () => {
         </Route>
         <Route path={routes.LOGIN} element={<Auth />} />
         <Route path={routes.REGISTER} element={<Auth />} />
+        <Route path={routes.FORGOT_PASSWORD} element={<ForgotPasswordForm />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
    </BrowserRouter>
