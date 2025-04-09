@@ -1,37 +1,88 @@
 import { CreateMessageSchema, ChatQuestion, ChatResponse, MessageResponseSchema, UpdateMessageSchema } from "@/types/Message";
 import instance from "./Axios-customize";
 
+const baseURL = 'http://localhost:8000';
+
+// Stream Chat with AI
+export const callStreamChatWithGemini = async (
+    data: ChatQuestion,
+    onMessage: (chunk: string) => void
+) => {
+    const response = await fetch(`${baseURL}/api/gemini/chat/stream`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok || !response.body) {
+        throw new Error("Failed to start stream");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    let buffer = "";
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+            if (buffer) {
+                onMessage(buffer);
+            }
+            break;
+        }
+
+        const chunk = decoder.decode(value, { stream: true });
+        buffer += chunk;
+
+        // Nếu buffer đủ dài, emit
+        if (buffer.length >= 8) {
+            onMessage(buffer);
+            buffer = "";
+            await new Promise((res) => setTimeout(res, 40));
+        }
+    }
+
+    // Emit phần còn lại
+    if (buffer) {
+        onMessage(buffer);
+    }
+};
+
+
 // Chat with AI
-export const ChatWithAI = (data: ChatQuestion) => {
-    return instance.post<ChatResponse>("/api/gemini/chat", data);
+export const ChatWithAI = async (data: ChatQuestion) => {
+    return (await instance.post<ChatResponse>("/api/gemini/chat", data)).data;
 };
 
 // Tạo tin nhắn
-export const callCreateMessage = (data: CreateMessageSchema) => {
-    return instance.post<MessageResponseSchema>("/api/messages/create", data);
+export const callCreateMessage = async (data: CreateMessageSchema) => {
+    return (await instance.post<MessageResponseSchema>("/api/messages/create", data)).data;
 };
 
 // Lấy tin nhắn theo ID
-export const callGetMessageById = (messageId: string) => {
-    return instance.get<MessageResponseSchema>(`/api/messages/${messageId}`);
+export const callGetMessageById = async (messageId: string) => {
+    return (await instance.get<MessageResponseSchema>(`/api/messages/${messageId}`)).data;
 };
 
 // Lấy tất cả tin nhắn trong một cuộc trò chuyện
-export const callGetMessages = (convId: string) => {
-    return instance.get<MessageResponseSchema[]>(`/api/messages/all/${convId}`);
+export const callGetMessages = async (convId: string) => {
+    return (await instance.get<MessageResponseSchema[]>(`/api/messages/all/${convId}`)).data;
 };
 
 // Lấy lịch sử tin nhắn trong một cuộc trò chuyện
-export const callGetHistory = (convId: string) => {
-    return instance.get<MessageResponseSchema[]>(`/api/messages/history/${convId}`);
+export const callGetHistory = async (convId: string) => {
+    return (await instance.get<MessageResponseSchema[]>(`/api/messages/history/${convId}`)).data;
 };
 
 // Cập nhật tin nhắn
-export const callUpdateMessage = (messageId: string, data: UpdateMessageSchema) => {
-    return instance.put<MessageResponseSchema>(`/api/messages/${messageId}`, data);
+export const callUpdateMessage = async (messageId: string, data: UpdateMessageSchema) => {
+    return (await instance.put<MessageResponseSchema>(`/api/messages/${messageId}`, data)).data;
 };
 
 // Xoá tin nhắn
-export const callDeleteMessage = (messageId: string) => {
-    return instance.delete<any>(`/api/messages/${messageId}`);
+export const callDeleteMessage = async (messageId: string) => {
+    return (await instance.delete<any>(`/api/messages/${messageId}`)).data;
 };

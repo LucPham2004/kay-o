@@ -3,26 +3,26 @@ import instance from "./Axios-customize";
 
 
 // Tạo cuộc trò chuyện
-export const callCreateConversation = (data: CreateConversationSchema) => {
-    return instance.post<ConversationResponseSchema>("/api/conversations/create", data);
+export const callCreateConversation = async (data: CreateConversationSchema) => {
+    return (await instance.post<ConversationResponseSchema>("/api/conversations/create", data)).data;
 };
 
 // Lấy tất cả cuộc trò chuyện của một user
-export const callGetConversationsByUser = (userId: string) => {
-    return instance.get<ConversationResponseSchema[]>(`/api/conversations/all/${userId}`);
+export const callGetConversationsByUser = async (userId: string) => {
+    return (await instance.get<ConversationResponseSchema[]>(`/api/conversations/all/${userId}`)).data;
 };
 
 // Lấy tất cả cuộc trò chuyện
-export const callGetAllConversations = () => {
-    return instance.get<ConversationResponseSchema[]>("/api/conversations/all");
+export const callGetAllConversations = async () => {
+    return (await instance.get<ConversationResponseSchema[]>("/api/conversations/all")).data;
 };
 
 // Cập nhật cuộc trò chuyện
-export const callUpdateConversation = (id: string, data: UpdateConversationSchema) => {
-    return instance.put<ConversationResponseSchema>(`/api/conversations/${id}`, data);
+export const callUpdateConversation = async (id: string, data: UpdateConversationSchema) => {
+    return (await instance.put<ConversationResponseSchema>(`/api/conversations/${id}`, data)).data;
 };
 
 // Xoá cuộc trò chuyện
-export const callDeleteConversation = (id: string) => {
-    return instance.delete<any>(`/api/conversations/${id}`);
+export const callDeleteConversation = async (id: string) => {
+    return (await instance.delete<any>(`/api/conversations/${id}`)).data;
 };

@@ -3,37 +3,63 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Highlight } from "prism-react-renderer";
 import { themes } from 'prism-react-renderer';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoCopyOutline } from "react-icons/io5";
-
-
-interface Message {
-    id: number;
-    text: string;
-    sender: "user" | "ai";
-}
+import { MessageResponseSchema } from "@/types/Message";
 
 interface MessageProps {
-    message: Message;
+    message: MessageResponseSchema;
+    isTyping?: boolean;
 }
 
 const ChatMessage: React.FC<MessageProps> = ({
-    message,
+    message, isTyping
 }) => {
 
     const { isDarkMode } = useTheme();
     const oneDark = themes.oneDark;
     const oneLight = themes.oneLight;
 
+    const [displayedText, setDisplayedText] = useState("");
+
+    useEffect(() => {
+        if (!isTyping) {
+            setDisplayedText(message.answer);
+            return;
+        }
+
+        let i = 0;
+        const typingSpeed = 10; // ms mỗi ký tự
+
+        const typeNextChar = () => {
+            if (i < message.answer.length) {
+                setDisplayedText(message.answer.slice(0, i + 1));
+                i++;
+                setTimeout(typeNextChar, typingSpeed);
+            }
+        };
+
+        typeNextChar();
+
+        return () => {
+            // cleanup nếu unmount
+            i = message.answer.length;
+        };
+    }, [message.answer, isTyping]);
+
     return (
-        <div>
-            <div className={`p-2 my-2 rounded-[20px] font-sans text-sm
-                    ${message?.sender === "user" ? "ml-auto w-fit max-w-xl" : "max-w-full"}
-                    ${isDarkMode 
-                        ? `text-gray-200 ${message?.sender === "user" ? "bg-[#303030] my-6" : ""}` 
-                        : `text-black ${message?.sender === "user" ? "bg-[#b3b3b3] my-6" : ""}`}`}
+        <div className="flex flex-col gap-4 ">
+            <div className={`p-2 rounded-[20px] font-sans text-sm ml-auto w-fit max-w-xl
+                    ${isDarkMode ? `text-gray-200 bg-[#303030]` : `text-black bg-[#ececec]`}
+            `}>
+                <p className={`px-2 pb-1`}>
+                    {message?.question}
+                </p>
+            </div>
+
+            <div className={`p-2 my-2 rounded-[20px] font-sans text-sm max-w-full
+                    ${isDarkMode ? `text-gray-200 ` : `text-black `}`}
             >
-                {message?.sender === "ai" && (
                 <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
@@ -88,7 +114,7 @@ const ChatMessage: React.FC<MessageProps> = ({
                             </div>
                             ) : (
                                 <code className={`px-2 py-1 rounded-lg 
-                                    ${isDarkMode ? 'bg-[#333537] text-gray-300' : 'bg-gray-200 text-gray-700'}`} 
+                                    ${isDarkMode ? 'bg-[#333537] text-gray-300' : 'bg-gray-100 text-gray-900'}`} 
                                     {...props}>
                                 {children}
                                 </code>
@@ -96,9 +122,6 @@ const ChatMessage: React.FC<MessageProps> = ({
                         },
                         h1: ({ node, ...props }) => (
                             <h1 className="text-2xl font-bold text-red-500" {...props} />
-                        ),
-                        li: ({ node, ...props }) => (
-                            <li className="list-disc list-inside mb-2" {...props} />
                         ),
                         p: ({ node, ...props }) => (
                             <p className="my-6 text-base" {...props} />
@@ -113,11 +136,16 @@ const ChatMessage: React.FC<MessageProps> = ({
                             <em className="italic" {...props} />
                         ),
                         ul: ({ node, ...props }) => (
-                            <ul className="list-disc list-inside ms-8 mb-2" {...props} />
+                            <ul className="list-disc list-outside pl-6 mb-4 space-y-2" {...props} />
                         ),
                         ol: ({ node, ...props }) => (
-                            <ol className="list-decimal list-inside ms-8 mb-2" {...props} />
+                            <ol className="list-decimal list-outside pl-6 mb-4 space-y-2" {...props} />
                         ),
+                        li: ({ node, children, ...props }) => (
+                            <li className="pl-1 leading-relaxed" {...props}>
+                                {children}
+                            </li>
+                        ),                          
                         hr: ({ node, ...props }) => (
                             <hr className="border-t-2 border-gray-500 my-4" {...props} />
                         ),
@@ -138,14 +166,8 @@ const ChatMessage: React.FC<MessageProps> = ({
                         ),
                     }}
                 >
-                    {message?.text}
+                    {displayedText}
                 </ReactMarkdown>
-                )}
-                {message?.sender === "user" && (
-                <p className={`px-2 pb-1 ${isDarkMode ? "text-gray-200" : "text-black"}`}>
-                    {message?.text}
-                </p>
-                )}
             </div>
         </div>
     );

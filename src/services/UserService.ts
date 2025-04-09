@@ -2,21 +2,21 @@ import { UserResponseSchema, UpdateUserSchema } from "@/types/User";
 import instance from "./Axios-customize";
 
 // Lấy thông tin người dùng theo ID
-export const callGetUserById = (userId: string) => {
-    return instance.get<UserResponseSchema>(`/api/users/${userId}`);
+export const callGetUserById = async (userId: string) => {
+    return (await instance.get<UserResponseSchema>(`/api/users/${userId}`)).data;
 };
 
 // Lấy tất cả người dùng
-export const callGetAllUsers = () => {
-    return instance.get<UserResponseSchema[]>(`/api/users/all`);
+export const callGetAllUsers = async () => {
+    return (await instance.get<UserResponseSchema[]>(`/api/users/all`)).data;
 };
 
 // Cập nhật người dùng
-export const callUpdateUser = (userId: string, data: UpdateUserSchema) => {
-    return instance.put<UserResponseSchema>(`/api/users/${userId}`, data);
+export const callUpdateUser = async (userId: string, data: UpdateUserSchema) => {
+    return (await instance.put<UserResponseSchema>(`/api/users/${userId}`, data)).data;
 };
 
 // Xoá người dùng
-export const callDeleteUser = (userId: string) => {
-    return instance.delete<any>(`/api/users/${userId}`);
+export const callDeleteUser = async (userId: string) => {
+    return (await instance.delete<any>(`/api/users/${userId}`)).data;
 };

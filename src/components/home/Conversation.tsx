@@ -1,21 +1,98 @@
 import { useTheme } from "@/utils/ThemeContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import ChatUI from "./ChatUI";
+import { useParams } from "react-router-dom";
+import { callGetMessages, callStreamChatWithGemini } from "@/services/MessageService";
+import { MessageResponseSchema } from "@/types/Message";
 
 
 
 const Conversation = () => {
+    const { conv_id } = useParams();
     const { isDarkMode } = useTheme();
-    const [message, setMessage] = useState("");
 
+    const [messages, setMessages] = useState<MessageResponseSchema[]>([]);
+    const [message, setMessage] = useState("");
+    const [isStreaming, setIsStreaming] = useState(false);
+    const [streamedId, setStreamedId] = useState<string | null>(null);
+
+    const handleSendMessage = async () => {
+        if (!message.trim() || !conv_id) return;
+        
+        const tempId = `${Date.now()}`;
+        const userMessage = {
+            _id: tempId, // tạm thời
+            conversation_id: conv_id,
+            question: message,
+            answer: "",
+            created_at: new Date().toISOString(),
+        };
+
+        setMessages((prev) => [...prev, userMessage]);
+        setMessage('');
+        setIsStreaming(true);
+        setStreamedId(userMessage._id);
+
+        const streamedAnswerRef = { value: "" };
+
+        try {
+            await callStreamChatWithGemini({ conv_id, question: message }, async (chunk: string) => {
+                streamedAnswerRef.value += chunk;
+        
+                setMessages((prev) =>
+                    prev.map((msg) =>
+                        msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
+                    )
+                );
+            });            
+        } catch (err) {
+            console.error("Error during streaming:", err);
+        } finally {
+            setIsStreaming(false);
+            setStreamedId(null);
+        }
+    };
+
+    useEffect(() => {
+        setMessages([]);
+    }, [conv_id]);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchConversations = async () => {
+            try {
+                if(conv_id) {
+                    const response = await callGetMessages(conv_id);
+                    console.log(response);
+                    if (!isMounted) return;
+    
+                    const newConversations = response;
+    
+                    setMessages((prev) => {
+                        const uniqueConversations = [...prev, ...newConversations].filter(
+                            (conv, index, self) => index === self.findIndex(c => c._id === conv._id)
+                        );
+                        return uniqueConversations;
+                    });
+                }
+            } catch (err) {
+                console.error("Lỗi khi lấy danh sách hội thoại:", err);
+            }
+        };
+
+        fetchConversations();
+        return () => {
+            isMounted = false;
+        };
+    }, [conv_id]);
 
     return (
         <div className={`max-h-[92vh] min-h-[92vh] w-full flex flex-col items-center justify-between
             ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}>
             
             <div className={`max-h-[82vh] min-h-[60vh] w-full flex justify-center overflow-y-auto`}>
-                <ChatUI />
+                <ChatUI messages={messages} isStreaming={isStreaming} streamedId={streamedId} />
             </div>
             
             {/* Chat Input */}
@@ -38,11 +115,14 @@ const Conversation = () => {
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
                             e.preventDefault();
-                            setMessage('');
+                            handleSendMessage();
                         }
                     }}
                 />
-                <button className={`p-3 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-gray-800 text-white'}`}>
+                <button 
+                    onClick={handleSendMessage}
+                    disabled={isStreaming}
+                    className={`p-3 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-gray-800 text-white'}`}>
                     <FaPaperPlane />
                 </button>
             </div>

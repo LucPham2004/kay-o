@@ -1,14 +1,42 @@
+import { callCreateConversation } from "@/services/ConversationService";
+import { ChatWithAI } from "@/services/MessageService";
 import { useTheme } from "@/utils/ThemeContext";
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
-
+const user_id = '67efef29f0c4127199dd6fb5';
 
 const Home = () => {
     const { isDarkMode } = useTheme();
     const [message, setMessage] = useState("");
+    const navigate = useNavigate();
 
+    const handleSend = async () => {
+        if (!message.trim()) return;
+
+        try {
+            const createRes = await callCreateConversation({
+                user_id: user_id,
+                name: message.slice(0, 30),
+            });
+
+            const conversationId = createRes._id;
+
+            const chatRes = await ChatWithAI({
+                conv_id: conversationId,
+                question: message,
+            });
+
+            console.log(createRes);
+            console.log(chatRes);
+
+            navigate(`/c/${conversationId}`);
+        } catch (error) {
+            console.error("Lỗi khi gửi tin nhắn:", error);
+        }
+    };
 
     return (
         <div className={`relative max-h-[92vh] min-h-[92vh] w-full flex flex-col items-center justify-start gap-4
@@ -53,11 +81,12 @@ const Home = () => {
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
                                     e.preventDefault();
-                                    setMessage('');
+                                    handleSend();
                                 }
                             }}
                         />
-                        <button className={`p-3 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-gray-800 text-white'}`}>
+                        <button onClick={handleSend}
+                            className={`p-3 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-gray-800 text-white'}`}>
                             <FaPaperPlane />
                         </button>
                     </div>

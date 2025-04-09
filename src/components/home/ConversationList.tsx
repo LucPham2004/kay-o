@@ -6,8 +6,8 @@ import isToday from "dayjs/plugin/isToday";
 import isYesterday from "dayjs/plugin/isYesterday";
 import React from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { Conversation } from "./Sidebar";
 import { Link } from "react-router-dom";
+import { ConversationResponseSchema } from "@/types/Conversation";
 
 dayjs.extend(relativeTime);
 dayjs.extend(isToday);
@@ -15,18 +15,18 @@ dayjs.extend(isYesterday);
 
 
 // Hàm nhóm các cuộc trò chuyện theo thời gian
-const groupConversations = (conversations: Conversation[]) => {
+const groupConversations = (conversations: ConversationResponseSchema[]) => {
     return {
-        today: conversations.filter((c) => dayjs(c.timestamp).isToday()),
-        yesterday: conversations.filter((c) => dayjs(c.timestamp).isYesterday()),
-        previous7Days: conversations.filter((c) => dayjs(c.timestamp).isAfter(dayjs().subtract(7, "days")) && !dayjs(c.timestamp).isToday() && !dayjs(c.timestamp).isYesterday()),
-        previous30Days: conversations.filter((c) => dayjs(c.timestamp).isAfter(dayjs().subtract(30, "days")) && dayjs(c.timestamp).isBefore(dayjs().subtract(7, "days"))),
-        longTimeAgo: conversations.filter((c) => dayjs(c.timestamp).isBefore(dayjs().subtract(30, "days"))),
+        today: conversations.filter((c) => dayjs(c.update_at).isToday()),
+        yesterday: conversations.filter((c) => dayjs(c.update_at).isYesterday()),
+        previous7Days: conversations.filter((c) => dayjs(c.update_at).isAfter(dayjs().subtract(7, "days")) && !dayjs(c.update_at).isToday() && !dayjs(c.update_at).isYesterday()),
+        previous30Days: conversations.filter((c) => dayjs(c.update_at).isAfter(dayjs().subtract(30, "days")) && dayjs(c.update_at).isBefore(dayjs().subtract(7, "days"))),
+        longTimeAgo: conversations.filter((c) => dayjs(c.update_at).isBefore(dayjs().subtract(30, "days"))),
     };
 };
 
 interface Props {
-    conversations: Conversation[];
+    conversations: ConversationResponseSchema[];
     openMenuId: string | null;
     onMenuToggle: (id: string) => void;
     onRename: (id: string) => void;
@@ -65,27 +65,29 @@ const ConversationList: React.FC<Props> = ({
                         : "Trên 30 ngày"}
                 </h3>
                 <ul>
-                    {items.map((conversation) => (
-                        <Link to={`/c/${conversation.id}`} key={conversation.id}>
-                        <li
-                            className={`relative flex justify-between items-center p-2 rounded-lg cursor-pointer transition group
+                {items.map((conversation) => (
+                    <li
+                        key={conversation._id}
+                        className={`relative flex justify-between items-center p-2 rounded-lg cursor-pointer transition group
                             ${isDarkMode ? 'hover:bg-[#3F3F3F]' : 'hover:bg-gray-200'}`}
-                        >
+                    >
+                        <Link to={`/c/${conversation._id}`} className="w-full flex justify-between items-center">
                             <span className="text-[15px] font-sans max-w-[90%] overflow-hidden text-ellipsis whitespace-nowrap">
-                                {conversation.title}
+                                {conversation.name}
                             </span>
                             <button className={`hidden group-hover:block
                                 ${isDarkMode ? 'hover:text-gray-100' : 'hover:text-gray-600'}`}
                                 onClick={(e) => {
+                                    e.preventDefault();
                                     e.stopPropagation();
-                                    onMenuToggle(conversation.id);
-                                  }}>
+                                    onMenuToggle(conversation._id);
+                                }}>
                                 <HiOutlineDotsHorizontal size={20} />
                             </button>
-
+                        </Link>
 
                             {/* Menu hiển thị khi click */}
-                            {openMenuId === conversation.id && (
+                            {openMenuId === conversation._id && (
                                 <div
                                     className={`absolute right-0 top-10 shadow-md rounded-lg p-2 w-36 z-10
                                         ${isDarkMode ? 'bg-[#323232]' : 'bg-white'}`}
@@ -95,7 +97,7 @@ const ConversationList: React.FC<Props> = ({
                                         className={`w-full text-left px-4 py-2 rounded
                                             ${isDarkMode ? 'hover:bg-[#474747]' : 'hover:bg-gray-100'}`}
                                         onClick={() => {
-                                            onRename(conversation.id);
+                                            onRename(conversation._id);
                                         }}
                                     >
                                         ✏️ Đổi tên
@@ -104,7 +106,7 @@ const ConversationList: React.FC<Props> = ({
                                         className={`w-full text-left px-4 py-2 rounded text-red-600
                                             ${isDarkMode ? 'hover:bg-[#474747]' : 'hover:bg-gray-100'}`}
                                         onClick={() => {
-                                            onDelete(conversation.id);
+                                            onDelete(conversation._id);
                                         }}
                                     >
                                         🗑 Xóa
@@ -112,7 +114,6 @@ const ConversationList: React.FC<Props> = ({
                                 </div>
                             )}
                         </li>
-                        </Link>
                     ))}
                 </ul>
             </div>

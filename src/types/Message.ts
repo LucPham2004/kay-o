@@ -21,7 +21,7 @@ export interface UpdateMessageSchema {
 }
 
 export interface MessageResponseSchema {
-    id: string;
+    _id: string;
     conversation_id: string;
     question: string;
     answer: string;

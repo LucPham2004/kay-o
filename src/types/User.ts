@@ -6,7 +6,7 @@ export interface CreateUserSchema {
 }
 
 export interface UserResponseSchema {
-    id: string;
+    _id: string;
     username: string;
     email: string;
     avatar_url?: string;

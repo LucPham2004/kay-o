@@ -1,40 +1,16 @@
 import { BsPencilSquare } from "react-icons/bs";
 import '../../styles/scrollbar.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaMoon } from "react-icons/fa";
 import { useTheme } from "@/utils/ThemeContext";
 import SearchBar from "../common/SearchBar";
 import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
-import dayjs from "dayjs";
 import { IoMdSunny } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { callGetConversationsByUser } from "@/services/ConversationService";
+import { ConversationResponseSchema } from "@/types/Conversation";
 
-
-export interface Conversation {
-    id: string;
-    title: string;
-    timestamp: string;
-}
-
-// Fake data
-const initialConversations: Conversation[] = [
-    { id: "1", title: "Chat với AI - 1", timestamp: dayjs().toISOString() }, // Hôm nay
-    { id: "2", title: "Trợ lý thông minh", timestamp: dayjs().subtract(1, "day").toISOString() }, // Hôm qua
-    { id: "3", title: "Cuộc trò chuyện 5 ngày trước", timestamp: dayjs().subtract(5, "days").toISOString() },
-    { id: "4", title: "Cuộc trò chuyện 20 ngày trước", timestamp: dayjs().subtract(20, "days").toISOString() },
-    { id: "5", title: "Cuộc trò chuyện 40 ngày trước", timestamp: dayjs().subtract(40, "days").toISOString() },
-    { id: "6", title: "Chat với AI - 1", timestamp: dayjs().toISOString() }, // Hôm nay
-    { id: "7", title: "Trợ lý thông minh", timestamp: dayjs().subtract(1, "day").toISOString() }, // Hôm qua
-    { id: "8", title: "Cuộc trò chuyện 5 ngày trước", timestamp: dayjs().subtract(5, "days").toISOString() },
-    { id: "9", title: "Cuộc trò chuyện 20 ngày trước", timestamp: dayjs().subtract(20, "days").toISOString() },
-    { id: "10", title: "Cuộc trò chuyện 40 ngày trước", timestamp: dayjs().subtract(40, "days").toISOString() },
-    { id: "11", title: "Chat với AI - 1", timestamp: dayjs().toISOString() }, // Hôm nay
-    { id: "12", title: "Chat với AI - 1", timestamp: dayjs().toISOString() }, // Hôm nay
-    { id: "13", title: "Chat với AI - 1", timestamp: dayjs().toISOString() }, // Hôm nay
-    { id: "14", title: "Chat với AI - 1", timestamp: dayjs().toISOString() }, // Hôm nay
-    { id: "15", title: "Chat với AI - 1", timestamp: dayjs().toISOString() }, // Hôm nay
-];
 
 interface SidebarProps {
     openMenuId: string | null;
@@ -43,18 +19,19 @@ interface SidebarProps {
 
 const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
     const { isDarkMode, toggleDarkMode } = useTheme();
+    const user_id = '67efef29f0c4127199dd6fb5';
 
     const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
     const [searchedConversations, setSearchedConversations] = useState<[] | null>(null);
 
-    const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
+    const [conversations, setConversations] = useState<ConversationResponseSchema[]>([]);
 
     // Xử lý đổi tên hội thoại
     const handleRename = (id: string) => {
         const newTitle = prompt("Nhập tên mới:");
         if (newTitle) {
             setConversations((prev) =>
-                prev.map((c) => (c.id === id ? { ...c, title: newTitle } : c))
+                prev.map((c) => (c._id === id ? { ...c, title: newTitle } : c))
             );
         }
     };
@@ -62,7 +39,7 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
     // Xử lý xóa hội thoại
     const handleDelete = (id: string) => {
         if (window.confirm("Bạn có chắc muốn xóa cuộc trò chuyện này?")) {
-            setConversations((prev) => prev.filter((c) => c.id !== id));
+            setConversations((prev) => prev.filter((c) => c._id !== id));
         }
     };
 
@@ -74,8 +51,36 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
         setSearchedConversations(null);
     };
 
+    useEffect(() => {
+        let isMounted = true;
+        const fetchConversations = async () => {
+            try {
+                const response = await callGetConversationsByUser(user_id);
+                console.log(response);
+                if (!isMounted) return;
+
+                const newConversations = response ?? [];
+
+                setConversations((prev) => {
+                    const uniqueConversations = [...prev, ...newConversations].filter(
+                        (conv, index, self) => index === self.findIndex(c => c._id === conv._id)
+                    );
+                    return uniqueConversations;
+                });
+
+            } catch (err) {
+                console.error("Lỗi khi lấy danh sách hội thoại:", err);
+            }
+        };
+
+        fetchConversations();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
     return (
-        <div className={`min-h-[100vh] max-h-[100vh] overflow-hidden min-w-[280px] flex flex-col items-center 
+        <div className={`min-h-[100vh] max-h-[100vh] min-w-[280px] flex flex-col items-center 
                 p-2 pb-0 pe-1 rounded-l-xl shadow-sm
                 ${isDarkMode ? 'bg-[#1F1F1F] text-gray-300'
                 : 'bg-[#F9F9F9] text-black'}`}>
@@ -121,11 +126,13 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
             {searchedConversations && searchedConversations?.length > 0 ? (
                 <></>
             ) : (
-                <ConversationList conversations={conversations}
-                openMenuId={openMenuId}
-                onMenuToggle={onMenuToggle} 
-                onRename={handleRename} 
-                onDelete={handleDelete} />
+                <ConversationList 
+                    conversations={conversations}
+                    openMenuId={openMenuId}
+                    onMenuToggle={onMenuToggle} 
+                    onRename={handleRename} 
+                    onDelete={handleDelete} 
+                />
             )}
 
             {/* Settings Modal */}
