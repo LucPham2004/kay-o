@@ -8,7 +8,7 @@ const Header = () => {
 
 
     return (
-        <div className={`max-h-[10vh] min-h-[10vh] min-w-full flex items-center justify-between px-4 border-b border-[#3c3d41]
+        <div className={`max-h-[8vh] min-h-[8vh] min-w-full flex items-center justify-between px-4 border-b border-[#3c3d41]
             ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}>
             <p></p>
             <button className={` rounded-lg text-xl p-2

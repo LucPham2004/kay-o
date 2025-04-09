@@ -11,7 +11,7 @@ const Home = () => {
 
 
     return (
-        <div className={`max-h-[90vh] min-h-[90vh] w-full flex flex-col items-center justify-center gap-4
+        <div className={`max-h-[92vh] min-h-[92vh] w-full flex flex-col items-center justify-center gap-4
             ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}>
             <p className={`text-3xl mb-2 font-medium
                 ${isDarkMode ? 'text-white' : 'text-black'}`}>Tôi có thể giúp gì cho bạn?</p>

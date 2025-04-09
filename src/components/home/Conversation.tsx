@@ -11,7 +11,7 @@ const Conversation = () => {
 
 
     return (
-        <div className={`max-h-[90vh] min-h-[90vh] w-full flex flex-col items-center justify-between
+        <div className={`max-h-[92vh] min-h-[92vh] w-full flex flex-col items-center justify-between
             ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}>
             
             <div className={`max-h-[80vh] min-h-[60vh] w-full flex justify-center overflow-y-auto`}>

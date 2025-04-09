@@ -115,7 +115,6 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
                         <p className="text-sm">New Chat</p>
                     </button>
                 </Link>
-                <hr className={`w-full mt-4 ${isDarkMode ? 'h-[1px] bg-gray-400' : 'h-[1.5px] bg-gray-600'}`}></hr>
             </div>
 
 
