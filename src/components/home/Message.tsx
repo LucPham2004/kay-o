@@ -27,7 +27,7 @@ const ChatMessage: React.FC<MessageProps> = ({
 
     return (
         <div>
-            <div className={`p-2 my-2 rounded-[20px] font-sans
+            <div className={`p-2 my-2 rounded-[20px] font-sans text-sm
                     ${message?.sender === "user" ? "ml-auto w-fit max-w-xl" : "max-w-full"}
                     ${isDarkMode 
                         ? `text-gray-200 ${message?.sender === "user" ? "bg-[#303030] my-6" : ""}` 
@@ -101,7 +101,7 @@ const ChatMessage: React.FC<MessageProps> = ({
                             <li className="list-disc list-inside mb-2" {...props} />
                         ),
                         p: ({ node, ...props }) => (
-                            <p className="my-6 text-lg" {...props} />
+                            <p className="my-6 text-base" {...props} />
                         ),
                         blockquote: ({ node, ...props }) => (
                             <blockquote className="border-l-4 border-gray-500 pl-4 italic" {...props} />
@@ -128,7 +128,7 @@ const ChatMessage: React.FC<MessageProps> = ({
                             <table className="border-collapse border border-gray-500 w-full" {...props} />
                         ),
                         th: ({ node, ...props }) => (
-                            <th className="border border-gray-500 bg-gray-200" {...props} />
+                            <th className={`border border-gray-500 ${isDarkMode ? 'bg-[#333537] text-gray-300' : 'bg-gray-200 text-gray-700'}`} {...props} />
                         ),
                         td: ({ node, ...props }) => (
                             <td className="border border-gray-500" {...props} />

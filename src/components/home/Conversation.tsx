@@ -1,7 +1,7 @@
 import { useTheme } from "@/utils/ThemeContext";
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
-import ChatUI from "./Chat";
+import ChatUI from "./ChatUI";
 
 
 
@@ -14,7 +14,7 @@ const Conversation = () => {
         <div className={`max-h-[92vh] min-h-[92vh] w-full flex flex-col items-center justify-between
             ${isDarkMode ? 'bg-[#232425] text-white' : 'bg-white text-black'}`}>
             
-            <div className={`max-h-[80vh] min-h-[60vh] w-full flex justify-center overflow-y-auto`}>
+            <div className={`max-h-[82vh] min-h-[60vh] w-full flex justify-center overflow-y-auto`}>
                 <ChatUI />
             </div>
             
