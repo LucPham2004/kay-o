@@ -23,32 +23,16 @@ export const callStreamChatWithGemini = async (
     const reader = response.body.getReader();
     const decoder = new TextDecoder("utf-8");
 
-    let buffer = "";
 
     while (true) {
         const { done, value } = await reader.read();
-        if (done) {
-            if (buffer) {
-                onMessage(buffer);
-            }
-            break;
-        }
+        if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        buffer += chunk;
-
-        // Nếu buffer đủ dài, emit
-        if (buffer.length >= 8) {
-            onMessage(buffer);
-            buffer = "";
-            await new Promise((res) => setTimeout(res, 40));
-        }
+        onMessage(chunk);
+            
     }
 
-    // Emit phần còn lại
-    if (buffer) {
-        onMessage(buffer);
-    }
 };
 
 

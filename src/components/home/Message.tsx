@@ -3,49 +3,23 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Highlight } from "prism-react-renderer";
 import { themes } from 'prism-react-renderer';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoCopyOutline } from "react-icons/io5";
 import { MessageResponseSchema } from "@/types/Message";
 
 interface MessageProps {
     message: MessageResponseSchema;
-    isTyping?: boolean;
 }
 
 const ChatMessage: React.FC<MessageProps> = ({
-    message, isTyping
+    message
 }) => {
 
     const { isDarkMode } = useTheme();
     const oneDark = themes.oneDark;
     const oneLight = themes.oneLight;
 
-    const [displayedText, setDisplayedText] = useState("");
-
-    useEffect(() => {
-        if (!isTyping) {
-            setDisplayedText(message.answer);
-            return;
-        }
-
-        let i = 0;
-        const typingSpeed = 10; // ms mỗi ký tự
-
-        const typeNextChar = () => {
-            if (i < message.answer.length) {
-                setDisplayedText(message.answer.slice(0, i + 1));
-                i++;
-                setTimeout(typeNextChar, typingSpeed);
-            }
-        };
-
-        typeNextChar();
-
-        return () => {
-            // cleanup nếu unmount
-            i = message.answer.length;
-        };
-    }, [message.answer, isTyping]);
+    
 
     return (
         <div className="flex flex-col gap-4 ">
@@ -166,7 +140,7 @@ const ChatMessage: React.FC<MessageProps> = ({
                         ),
                     }}
                 >
-                    {displayedText}
+                    {message.answer}
                 </ReactMarkdown>
             </div>
         </div>

@@ -6,7 +6,7 @@ import isToday from "dayjs/plugin/isToday";
 import isYesterday from "dayjs/plugin/isYesterday";
 import React from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ConversationResponseSchema } from "@/types/Conversation";
 
 dayjs.extend(relativeTime);
@@ -40,13 +40,14 @@ const ConversationList: React.FC<Props> = ({
     onRename, 
     onDelete 
 }) => {
+    const { conv_id } = useParams();
     const { isDarkMode } = useTheme();
     const grouped = groupConversations(conversations);
 
 
 
     return (
-        <div className={`w-full max-w-md rounded-lg p-2 pt-1 overflow-y-auto mb-4
+        <div className={`w-full max-w-md rounded-lg p-2 pt-1 overflow-y-auto mb-4 pb-24
             ${conversations.length > 10 ? 'pe-2' : 'pe-4'}`}>
 
             {Object.entries(grouped).map(([group, items]) => (
@@ -69,6 +70,9 @@ const ConversationList: React.FC<Props> = ({
                     <li
                         key={conversation._id}
                         className={`relative flex justify-between items-center p-2 rounded-lg cursor-pointer transition group
+                            ${conv_id == conversation._id 
+                                ? `${isDarkMode ? 'bg-[#333333]' : 'bg-gray-300'}` 
+                                : ``}
                             ${isDarkMode ? 'hover:bg-[#3F3F3F]' : 'hover:bg-gray-200'}`}
                     >
                         <Link to={`/c/${conversation._id}`} className="w-full flex justify-between items-center">
@@ -89,7 +93,7 @@ const ConversationList: React.FC<Props> = ({
                             {/* Menu hiển thị khi click */}
                             {openMenuId === conversation._id && (
                                 <div
-                                    className={`absolute right-0 top-10 shadow-md rounded-lg p-2 w-36 z-10
+                                    className={`absolute right-0 top-10 shadow-md rounded-lg p-2 w-36 z-10 text-sm
                                         ${isDarkMode ? 'bg-[#323232]' : 'bg-white'}`}
                                     onClick={(e) => e.stopPropagation()}
                                 >

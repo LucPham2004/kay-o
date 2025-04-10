@@ -1,5 +1,4 @@
 import { callCreateConversation } from "@/services/ConversationService";
-import { ChatWithAI } from "@/services/MessageService";
 import { useTheme } from "@/utils/ThemeContext";
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
@@ -21,16 +20,12 @@ const Home = () => {
                 user_id: user_id,
                 name: message.slice(0, 30),
             });
+            console.log("create " + JSON.stringify(createRes));
 
             const conversationId = createRes._id;
 
-            const chatRes = await ChatWithAI({
-                conv_id: conversationId,
-                question: message,
-            });
-
-            console.log(createRes);
-            console.log(chatRes);
+            sessionStorage.setItem('initialMessage', message);
+            sessionStorage.setItem('newConv', JSON.stringify(createRes));
 
             navigate(`/c/${conversationId}`);
         } catch (error) {

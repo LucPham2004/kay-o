@@ -7,7 +7,7 @@ import SearchBar from "../common/SearchBar";
 import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
 import { IoMdSunny } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { callGetConversationsByUser } from "@/services/ConversationService";
 import { ConversationResponseSchema } from "@/types/Conversation";
 
@@ -18,6 +18,7 @@ interface SidebarProps {
 }
 
 const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
+    const { conv_id } = useParams();
     const { isDarkMode, toggleDarkMode } = useTheme();
     const user_id = '67efef29f0c4127199dd6fb5';
 
@@ -52,6 +53,23 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
     };
 
     useEffect(() => {
+        setTimeout(() => {
+            const newConvStr = sessionStorage.getItem('newConv');
+            if (newConvStr) {
+                try {
+                    const newConv = JSON.parse(newConvStr);
+                    console.log(newConv)
+                    setConversations(prev => [newConv, ...prev]);
+                    console.log(conversations)
+                } catch (err) {
+                    console.error("Lỗi khi parse newConv từ sessionStorage:", err);
+                }
+                sessionStorage.removeItem('newConv');
+            }
+        }, 100);
+    }, [conv_id]);
+
+    useEffect(() => {
         let isMounted = true;
         const fetchConversations = async () => {
             try {
@@ -59,7 +77,7 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
                 console.log(response);
                 if (!isMounted) return;
 
-                const newConversations = response ?? [];
+                const newConversations = response.reverse() ?? [];
 
                 setConversations((prev) => {
                     const uniqueConversations = [...prev, ...newConversations].filter(

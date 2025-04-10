@@ -9,7 +9,7 @@ interface ChatUIProps {
     streamedId: string | null;
 }
 
-const ChatUI: React.FC<ChatUIProps> = ({ messages, isStreaming, streamedId }) => {
+const ChatUI: React.FC<ChatUIProps> = ({ messages, isStreaming }) => {
     const { conv_id } = useParams();
     const chatEndRef = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -49,12 +49,12 @@ const ChatUI: React.FC<ChatUIProps> = ({ messages, isStreaming, streamedId }) =>
             <div className="flex-1 overflow-auto p-4 rounded-xl">
                 {messages.map((message) => (
                     <div key={message._id}>
-                        <Message message={message} isTyping={isStreaming && message._id === streamedId}/>
+                        <Message message={message} />
                     </div>
                 ))}
                 {isStreaming && (
                 <div className="px-4 py-2 text-gray-500 italic animate-pulse">
-                    AI đang trả lời<span className="animate-bounce">...</span>
+                    KayO đang trả lời<span className="animate-bounce">...</span>
                 </div>
                 )}
                 <div ref={chatEndRef}/>

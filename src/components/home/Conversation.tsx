@@ -37,15 +37,55 @@ const Conversation = () => {
         const streamedAnswerRef = { value: "" };
 
         try {
-            await callStreamChatWithGemini({ conv_id, question: message }, async (chunk: string) => {
-                streamedAnswerRef.value += chunk;
+            await callStreamChatWithGemini({ conv_id, question: message }, async (char: string) => {
+                streamedAnswerRef.value += char;
         
                 setMessages((prev) =>
                     prev.map((msg) =>
                         msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
                     )
                 );
-            });            
+            });
+        } catch (err) {
+            console.error("Error during streaming:", err);
+        } finally {
+            setIsStreaming(false);
+            setStreamedId(null);
+        }
+    };
+    
+    const sendInitialMessage = async (initialMessage: string) => {
+        if (!initialMessage.trim() || !conv_id) {
+            setIsStreaming(false);
+            return;
+        }
+    
+        const tempId = `${Date.now()}`;
+        const userMessage = {
+            _id: tempId,
+            conversation_id: conv_id,
+            question: initialMessage,
+            answer: "",
+            created_at: new Date().toISOString(),
+        };
+    
+        setMessages((prev) => [...prev, userMessage]);
+        setMessage('');
+        setIsStreaming(true);
+        setStreamedId(tempId);
+    
+        const streamedAnswerRef = { value: "" };
+    
+        try {
+            await callStreamChatWithGemini({ conv_id, question: initialMessage }, async (char: string) => {
+                streamedAnswerRef.value += char;
+    
+                setMessages((prev) =>
+                    prev.map((msg) =>
+                        msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
+                    )
+                );
+            });
         } catch (err) {
             console.error("Error during streaming:", err);
         } finally {
@@ -56,24 +96,36 @@ const Conversation = () => {
 
     useEffect(() => {
         setMessages([]);
+        setIsStreaming(false);
     }, [conv_id]);
 
     useEffect(() => {
+        setTimeout(() => {
+            const initialMessage = sessionStorage.getItem('initialMessage');
+            if (initialMessage && conv_id) {
+                sessionStorage.removeItem('initialMessage');
+                sendInitialMessage(initialMessage);
+            }
+        }, 100);
+    }, []);
+
+    useEffect(() => {
         let isMounted = true;
-        const fetchConversations = async () => {
+        const initialMessage = sessionStorage.getItem('initialMessage');
+        const fetchConversationMessages = async () => {
             try {
-                if(conv_id) {
+                if(conv_id && !initialMessage) {
                     const response = await callGetMessages(conv_id);
                     console.log(response);
                     if (!isMounted) return;
     
-                    const newConversations = response;
+                    const newMessages = response.reverse();
     
                     setMessages((prev) => {
-                        const uniqueConversations = [...prev, ...newConversations].filter(
+                        const uniqueMessages = [...prev, ...newMessages].filter(
                             (conv, index, self) => index === self.findIndex(c => c._id === conv._id)
                         );
-                        return uniqueConversations;
+                        return uniqueMessages;
                     });
                 }
             } catch (err) {
@@ -81,7 +133,7 @@ const Conversation = () => {
             }
         };
 
-        fetchConversations();
+        fetchConversationMessages();
         return () => {
             isMounted = false;
         };
