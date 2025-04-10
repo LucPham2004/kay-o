@@ -60,13 +60,13 @@ const Home = () => {
                     <div className={`w-full max-w-2xl rounded-l-xl rounded-r-[20px] flex items-end justify-center gap-2
                     ${isDarkMode ? 'bg-[#303030]' : 'shadow-xl border border-gray-200'}`}>
                         <textarea
-                            className={`flex-grow w-full rounded-[20px] px-4 pt-2 pb-2.5 text-[14px] resize-none 
+                            className={`flex-grow w-full rounded-[20px] px-4 pt-3 pb-3.5 text-[15px] resize-none 
                                 overflow-y-auto focus:outline-none bg-transparent
                                 ${isDarkMode ? 'text-gray-200' : 'text-black'}`}
                             placeholder="Hỏi bất cứ thứ gì"
                             value={message}
                             rows={1}
-                            style={{ lineHeight: '1.5', maxHeight: 'calc(1.5em * 6.5 + 0.5rem)', minHeight: '1.5em' }}
+                            style={{ lineHeight: '1.5', maxHeight: 'calc(1.5em * 6.5 + 0.5rem)', minHeight: '2em' }}
                             onChange={(e) => {
                                 setMessage(e.target.value);
 
@@ -81,7 +81,7 @@ const Home = () => {
                             }}
                         />
                         <button onClick={handleSend}
-                            className={`p-3 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-gray-800 text-white'}`}>
+                            className={`p-4 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-gray-800 text-white'}`}>
                             <FaPaperPlane />
                         </button>
                     </div>

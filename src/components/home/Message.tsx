@@ -6,6 +6,7 @@ import { themes } from 'prism-react-renderer';
 import { useState } from "react";
 import { IoCopyOutline } from "react-icons/io5";
 import { MessageResponseSchema } from "@/types/Message";
+import '../../styles/scrollbar.css'
 
 interface MessageProps {
     message: MessageResponseSchema;
@@ -26,9 +27,9 @@ const ChatMessage: React.FC<MessageProps> = ({
             <div className={`p-2 rounded-[20px] font-sans text-sm ml-auto w-fit max-w-xl
                     ${isDarkMode ? `text-gray-200 bg-[#303030]` : `text-black bg-[#ececec]`}
             `}>
-                <p className={`px-2 pb-1`}>
+                <div className={`whitespace-pre-wrap px-2 pb-1`}>
                     {message?.question}
-                </p>
+                </div>
             </div>
 
             <div className={`p-2 my-2 rounded-[20px] font-sans text-sm max-w-full
@@ -61,7 +62,7 @@ const ChatMessage: React.FC<MessageProps> = ({
                                 {/* Header */}
                                 <div className={`flex items-center justify-between px-4 py-2 text-sm font-semibold
                                         ${isDarkMode ? 'bg-[#333537] text-gray-400' : 'bg-gray-200 text-gray-700'}`}>
-                                    <span className="capitalize">{language}</span>
+                                    <span className="">{language}</span>
                                     <button
                                     onClick={handleCopy}
                                     className={`text-xs px-2 py-1 rounded transition flex gap-1 items-center`}
@@ -74,7 +75,7 @@ const ChatMessage: React.FC<MessageProps> = ({
                                 {/* Code block */}
                                 <Highlight code={codeString} language={language} theme={isDarkMode ? oneDark : oneLight}>
                                     {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                                    <pre className={`${className} p-4 text-sm`} style={style}>
+                                    <pre className={`${className} p-4 text-sm overflow-x-auto custom-scrollbar`} style={style}>
                                         {tokens.map((line, i) => (
                                         <div key={i} {...getLineProps({ line })}>
                                             {line.map((token, key) => (
@@ -87,7 +88,8 @@ const ChatMessage: React.FC<MessageProps> = ({
                                 </Highlight>
                             </div>
                             ) : (
-                                <code className={`px-2 py-1 rounded-lg 
+                                <code className={`inline-block px-[6px] py-[2px] rounded-lg max-w-full overflow-x-auto align-middle 
+                                    leading-normal custom-scrollbar
                                     ${isDarkMode ? 'bg-[#333537] text-gray-300' : 'bg-gray-100 text-gray-900'}`} 
                                     {...props}>
                                 {children}

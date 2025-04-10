@@ -24,7 +24,7 @@ const HomePage = () => {
 
                 <Sidebar openMenuId={openMenuId} onMenuToggle={handleMenuToggle} />
                 
-                <div className="flex flex-col items-center justify-start h-full w-full">
+                <div className="flex flex-col items-center justify-start h-full w-full overflow-hidden">
                     <Header />
                     <Outlet/>
                 </div>
