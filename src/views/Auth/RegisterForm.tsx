@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from '@/utils/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@/utils/constant';
+import { callRegister } from '@/services/AuthService';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -11,11 +12,25 @@ const RegisterForm = () => {
     confirmPassword: '',
   });
   const { isDarkMode } = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Register:', formData);
+    setIsLoading(true);
+    const data = {
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+    };
+    const response = await callRegister(data);
+    if(response.is_valid === true){
+      navigate(routes.LOGIN);
+    } else {
+      console.log(response);
+    } 
+    setIsLoading(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,25 +42,25 @@ const RegisterForm = () => {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center ${
-        isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
-      }`}
+      className={`min-h-screen w-full flex items-center justify-center
+        ${isDarkMode ? 'bg-[#232425]' : 'bg-white'}`}
     >
       <div
-        className={`max-w-md w-full space-y-8 p-8 rounded-xl shadow-lg ${
-          isDarkMode ? 'bg-gray-800' : 'bg-white'
-        }`}
+        className={`max-w-md w-full space-y-8 p-8 rounded-xl shadow-lg border
+          ${isDarkMode 
+            ? 'bg-[#1F1F1F] text-gray-300 border-gray-700' 
+            : 'bg-[#F9F9F9] text-black border-gray-200'}`}
       >
         <div className="text-center">
           <div className="flex items-center justify-center space-x-3">
             <img
               src={"/kayo.webp"}
               alt="KayO Logo"
-              className="h-10 w-10 object-contain"
+              className={`w-10 h-10 rounded-full ${isDarkMode ? 'text-white' : 'text-black'}`}
             />
             <h1
               className={`text-4xl font-bold tracking-tight ${
-                isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                isDarkMode ? 'text-white' : 'text-black'
               }`}
             >
               KayO
@@ -78,9 +93,11 @@ const RegisterForm = () => {
                 required
                 className={`mt-1 w-full px-4 py-3 rounded-md border ${
                   isDarkMode
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
+                    ? 'bg-[#232425] border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-blue-600 focus:border-blue-600'
-                } focus:outline-none focus:ring-2`}
+                  } focus:outline-none focus:ring-2
+                ${isLoading ? 'opacity-50 cursor-not-allowed' : ''} 
+                `}
                 placeholder="username"
                 value={formData.username}
                 onChange={handleChange}
@@ -103,9 +120,11 @@ const RegisterForm = () => {
                 required
                 className={`mt-1 w-full px-4 py-3 rounded-md border ${
                   isDarkMode
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
+                    ? 'bg-[#232425] border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-blue-600 focus:border-blue-600'
-                } focus:outline-none focus:ring-2`}
+                } focus:outline-none focus:ring-2
+                ${isLoading ? 'opacity-50 cursor-not-allowed' : ''} 
+                `}
                 placeholder="you@gmail.com"
                 value={formData.email}
                 onChange={handleChange}
@@ -128,9 +147,11 @@ const RegisterForm = () => {
                 required
                 className={`mt-1 w-full px-4 py-3 rounded-md border ${
                   isDarkMode
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
+                    ? 'bg-[#232425] border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-blue-600 focus:border-blue-600'
-                } focus:outline-none focus:ring-2`}
+                } focus:outline-none focus:ring-2
+                ${isLoading ? 'opacity-50 cursor-not-allowed' : ''} 
+                `}
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
@@ -153,9 +174,11 @@ const RegisterForm = () => {
                 required
                 className={`mt-1 w-full px-4 py-3 rounded-md border ${
                   isDarkMode
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
+                    ? 'bg-[#232425] border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-blue-600 focus:border-blue-600'
-                } focus:outline-none focus:ring-2`}
+                } focus:outline-none focus:ring-2
+                ${isLoading ? 'opacity-50 cursor-not-allowed' : ''} 
+                `}
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -170,9 +193,12 @@ const RegisterForm = () => {
                 isDarkMode
                   ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
                   : 'bg-blue-500 hover:bg-blue-600 focus:ring-blue-600'
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150`}
+                } focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150
+                ${isLoading ? 'opacity-50 cursor-not-allowed' : ''} 
+              `}
+              disabled={isLoading}
             >
-              Đăng ký
+              {isLoading ? 'Đang đăng ký...' : 'Đăng ký'} 
             </button>
           </div>
 

@@ -6,6 +6,7 @@ interface ResetPasswordProps {
   confirmPassword: string;
   onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  isLoading: boolean;
 }
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({
@@ -13,6 +14,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
   confirmPassword,
   onPasswordChange,
   onSubmit,
+  isLoading
 }) => {
   const { isDarkMode } = useTheme();
 
@@ -34,9 +36,10 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
           required
           className={`mt-1 w-full px-4 py-3 rounded-md border ${
             isDarkMode
-              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
-            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-blue-600 focus:border-blue-600'
-          } focus:outline-none focus:ring-2`}
+              ? 'bg-[#232425] border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
+              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-blue-600 focus:border-blue-600'
+          } focus:outline-none focus:ring-2
+          ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           placeholder="Nhập mật khẩu mới"
           value={newPassword}
           onChange={onPasswordChange}
@@ -59,9 +62,10 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
           required
           className={`mt-1 w-full px-4 py-3 rounded-md border ${
             isDarkMode
-              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
+              ? 'bg-[#232425] border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-blue-600 focus:border-blue-600'
-          } focus:outline-none focus:ring-2`}
+          } focus:outline-none focus:ring-2
+          ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           placeholder="Nhập lại mật khẩu mới"
           value={confirmPassword}
           onChange={onPasswordChange}
@@ -75,7 +79,9 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
             isDarkMode
               ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
               : 'bg-blue-500 hover:bg-blue-600 focus:ring-blue-600'
-          } focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150`}
+          } focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150
+          ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isLoading}
         >
           Đặt lại mật khẩu
         </button>
