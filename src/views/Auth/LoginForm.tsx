@@ -4,12 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { routes } from '@/utils/constant';
 import { FcGoogle } from 'react-icons/fc';
 import { callLogin } from '@/services/AuthService';
-const Login = () => {
+import { useAppDispatch } from '@/redux/hooks';
+import { doLoginSuccess } from '@/redux/slices/authSlice';
+  const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   }); 
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
   const { isDarkMode } = useTheme();  
   const navigate = useNavigate();
 
@@ -23,7 +26,7 @@ const Login = () => {
     const response = await callLogin(data);
     console.log(response);  
     if(response.is_valid === true){
-      window.localStorage.setItem('access_token', response.accessToken);
+      dispatch(doLoginSuccess({ user: response.user, accessToken: response.accessToken }));
       navigate(routes.DEFAULT);
     } else { 
       console.log(response);

@@ -16,7 +16,7 @@ const Router = () => {
         </Route>
         <Route path={routes.LOGIN} element={<Auth />} />
         <Route path={routes.REGISTER} element={<Auth />} />
-        <Route path={routes.FORGOT_PASSWORD} element={<ForgotPasswordForm />} />
+        <Route path={routes.FORGOT_PASSWORD} element={<Auth />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
    </BrowserRouter>
