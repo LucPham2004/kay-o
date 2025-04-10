@@ -5,9 +5,10 @@ import { routes } from '@/utils/constant';
 import ForgotPassword from '@/components/auth/ForgotPassword';
 import VerifyOTP from '@/components/auth/VerifyOTP';
 import ResetPassword from '@/components/auth/ResetPassword';
-
+import { callForgotPassword, callResetPassword, callVerifyOTP } from '@/services/AuthService';
 const ForgotPasswordForm = () => {
   const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     otp: '',
@@ -17,23 +18,6 @@ const ForgotPasswordForm = () => {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (step === 1) {
-      // TODO: Send OTP to email
-      console.log('Sending OTP to:', formData.email);
-      setStep(2);
-    } else if (step === 2) {
-      // TODO: Verify OTP
-      console.log('Verifying OTP:', formData.otp);
-      setStep(3);
-    } else {
-      // TODO: Reset password
-      console.log('Resetting password:', formData.newPassword);
-      navigate(routes.LOGIN);
-    }
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -41,19 +25,64 @@ const ForgotPasswordForm = () => {
     });
   };
 
-  const handleResendOtp = () => {
-    // TODO: Resend OTP to email
-    console.log('Resending OTP to:', formData.email);
+  const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {    
+    e.preventDefault();
+    setIsLoading(true);
+    const data = {
+      email: formData.email,
+    };
+    const response = await callForgotPassword(data);
+    if(response.is_valid === true){
+      setStep(2);
+    } else {
+      console.log(response);
+    }
+    setIsLoading(false);
   };
+
+  const handleVerifyOTP = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const data = {
+      email: formData.email,
+      otp: formData.otp,
+    };
+    const response = await callVerifyOTP(data);
+    if(response.is_valid === true){
+      setStep(3);
+    } else {
+      console.log(response);
+    }
+    setIsLoading(false);
+  };
+
+  const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const data = {
+      email: formData.email,
+      otp: formData.otp,
+      newPassword: formData.newPassword,
+      confirmPassword: formData.confirmPassword,
+    };
+    const response = await callResetPassword(data);
+    if(response.is_valid === true){
+      navigate(routes.LOGIN);
+    } else {
+      console.log(response);
+    }
+    setIsLoading(false);
+  };  
 
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
-          <ForgotPassword
+          <ForgotPassword 
             email={formData.email}
             onEmailChange={handleChange}
-            onSubmit={handleSubmit}
+            onSubmit={(e) => handleForgotPassword(e as React.FormEvent<HTMLFormElement>)}
+            isLoading={isLoading}
           />
         );
       case 2:
@@ -61,17 +90,19 @@ const ForgotPasswordForm = () => {
           <VerifyOTP
             otp={formData.otp}
             onOtpChange={handleChange}
-            onSubmit={handleSubmit}
-            onResendOtp={handleResendOtp}
+            onSubmit={(e) => handleVerifyOTP(e as React.FormEvent<HTMLFormElement>)}
+            onResendOtp={() => handleForgotPassword(new Event('submit') as unknown as React.FormEvent<HTMLFormElement>)}
+            isLoading={isLoading}
           />
         );
       case 3:
         return (
-          <ResetPassword
+          <ResetPassword  
             newPassword={formData.newPassword}
             confirmPassword={formData.confirmPassword}
             onPasswordChange={handleChange}
-            onSubmit={handleSubmit}
+            onSubmit={(e) => handleResetPassword(e as React.FormEvent<HTMLFormElement>) }
+            isLoading={isLoading}
           />
         );
       default:
@@ -81,25 +112,25 @@ const ForgotPasswordForm = () => {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center ${
-        isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'
-      }`}
+      className={`min-h-screen w-full flex items-center justify-center
+        ${isDarkMode ? 'bg-[#232425]' : 'bg-white'}`}
     >
       <div
-        className={`max-w-md w-full space-y-8 p-8 rounded-xl shadow-lg ${
-          isDarkMode ? 'bg-gray-800' : 'bg-white'
-        }`}
+        className={`max-w-md w-full space-y-8 p-8 rounded-xl shadow-lg border
+          ${isDarkMode 
+            ? 'bg-[#1F1F1F] text-gray-300 border-gray-700' 
+            : 'bg-[#F9F9F9] text-black border-gray-200'}`}
       >
         <div className="text-center">
           <div className="flex items-center justify-center space-x-3">
             <img
               src={'/kayo.webp'}
               alt="KayO Logo"
-              className="h-10 w-10 object-contain"
+              className={`w-10 h-10 rounded-full ${isDarkMode ? 'text-white' : 'text-black'}`}
             />
             <h1
               className={`text-4xl font-bold tracking-tight ${
-                isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                isDarkMode ? 'text-white' : 'text-black'
               }`}
             >
               KayO
