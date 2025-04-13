@@ -8,7 +8,7 @@ import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
 import { IoMdSunny } from "react-icons/io";
 import { Link, useParams } from "react-router-dom";
-import { callGetConversationsByUser } from "@/services/ConversationService";
+import { callDeleteConversation, callGetConversationsByUser, callUpdateConversation } from "@/services/ConversationService";
 import { ConversationResponseSchema } from "@/types/Conversation";
 
 
@@ -27,22 +27,35 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
 
     const [conversations, setConversations] = useState<ConversationResponseSchema[]>([]);
 
-    // Xử lý đổi tên hội thoại
-    const handleRename = (id: string) => {
+    // Đổi tên hội thoại
+    const handleRename = async (id: string) => {
         const newTitle = prompt("Nhập tên mới:");
         if (newTitle) {
-            setConversations((prev) =>
-                prev.map((c) => (c._id === id ? { ...c, title: newTitle } : c))
-            );
+            try {
+                await callUpdateConversation(id, { name: newTitle });
+                setConversations((prev) =>
+                    prev.map((c) => (c._id === id ? { ...c, title: newTitle } : c))
+                );
+            } catch (error) {
+                console.error("Lỗi khi cập nhật tên hội thoại:", error);
+                alert("Đổi tên thất bại. Vui lòng thử lại.");
+            }
         }
     };
 
-    // Xử lý xóa hội thoại
-    const handleDelete = (id: string) => {
+    // Xoá hội thoại
+    const handleDelete = async (id: string) => {
         if (window.confirm("Bạn có chắc muốn xóa cuộc trò chuyện này?")) {
-            setConversations((prev) => prev.filter((c) => c._id !== id));
+            try {
+                await callDeleteConversation(id);
+                setConversations((prev) => prev.filter((c) => c._id !== id));
+            } catch (error) {
+                console.error("Lỗi khi xoá hội thoại:", error);
+                alert("Xoá thất bại. Vui lòng thử lại.");
+            }
         }
     };
+
 
     const handleConversationSearch = async () => {
 

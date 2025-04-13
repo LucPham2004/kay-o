@@ -8,7 +8,7 @@ export const callStreamChatWithGemini = async (
     data: ChatQuestion,
     onMessage: (chunk: string) => void
 ) => {
-    const response = await fetch(`${baseURL}/api/gemini/chat/stream`, {
+    const response = await fetch(`${baseURL}/api/ai/gemini/stream`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -32,14 +32,82 @@ export const callStreamChatWithGemini = async (
         onMessage(chunk);
             
     }
-
 };
 
+export const callStreamChatWithDeepseek = async (
+    data: ChatQuestion,
+    onMessage: (chunk: string) => void
+) => {
+    const response = await fetch(`${baseURL}/api/ai/deepseek/stream`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok || !response.body) {
+        throw new Error("Failed to start stream");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        onMessage(chunk);
+
+    }
+};
+
+
+export const callStreamChatWithLlama = async (
+    data: ChatQuestion,
+    onMessage: (chunk: string) => void
+) => {
+    const response = await fetch(`${baseURL}/api/ai/llama/stream`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok || !response.body) {
+        throw new Error("Failed to start stream");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        onMessage(chunk);
+
+    }
+};
 
 // Chat with AI
-export const ChatWithAI = async (data: ChatQuestion) => {
-    return (await instance.post<ChatResponse>("/api/gemini/chat", data)).data;
+
+export const ChatWithGemini = async (data: ChatQuestion) => {
+    return (await instance.post<ChatResponse>("/api/ai/gemini/chat", data)).data;
 };
+
+// export const ChatWithLlama = async (data: ChatQuestion) => {
+//     return (await instance.post<ChatResponse>("/api/ai/llama/chat", data)).data;
+// };
+
+// export const ChatWithDeepseek = async (data: ChatQuestion) => {
+//     return (await instance.post<ChatResponse>("/api/ai/deepseek/chat", data)).data;
+// };
 
 // Tạo tin nhắn
 export const callCreateMessage = async (data: CreateMessageSchema) => {

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import ChatUI from "./ChatUI";
 import { useParams } from "react-router-dom";
-import { callGetMessages, callStreamChatWithGemini } from "@/services/MessageService";
+import { callGetMessages, callStreamChatWithDeepseek, callStreamChatWithGemini, callStreamChatWithLlama } from "@/services/MessageService";
 import { MessageResponseSchema } from "@/types/Message";
 
 
@@ -37,15 +37,36 @@ const Conversation = () => {
         const streamedAnswerRef = { value: "" };
 
         try {
-            await callStreamChatWithGemini({ conv_id, question: message }, async (char: string) => {
-                streamedAnswerRef.value += char;
+            // await callStreamChatWithGemini({ conv_id, question: message }, async (char: string) => {
+            //     streamedAnswerRef.value += char;
         
+            //     setMessages((prev) =>
+            //         prev.map((msg) =>
+            //             msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
+            //         )
+            //     );
+            // });
+
+            await callStreamChatWithDeepseek({ conv_id, question: message }, async (char: string) => {
+                streamedAnswerRef.value += char;
+    
                 setMessages((prev) =>
                     prev.map((msg) =>
                         msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
                     )
                 );
             });
+
+            // await callStreamChatWithLlama({ conv_id, question: message }, async (char: string) => {
+            //     streamedAnswerRef.value += char;
+    
+            //     setMessages((prev) =>
+            //         prev.map((msg) =>
+            //             msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
+            //         )
+            //     );
+            // });
+
         } catch (err) {
             console.error("Error during streaming:", err);
         } finally {
@@ -77,7 +98,17 @@ const Conversation = () => {
         const streamedAnswerRef = { value: "" };
     
         try {
-            await callStreamChatWithGemini({ conv_id, question: initialMessage }, async (char: string) => {
+            // await callStreamChatWithGemini({ conv_id, question: initialMessage }, async (char: string) => {
+            //     streamedAnswerRef.value += char;
+    
+            //     setMessages((prev) =>
+            //         prev.map((msg) =>
+            //             msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
+            //         )
+            //     );
+            // });
+
+            await callStreamChatWithDeepseek({ conv_id, question: initialMessage }, async (char: string) => {
                 streamedAnswerRef.value += char;
     
                 setMessages((prev) =>
@@ -86,6 +117,17 @@ const Conversation = () => {
                     )
                 );
             });
+            
+            // await callStreamChatWithLlama({ conv_id, question: message }, async (char: string) => {
+            //     streamedAnswerRef.value += char;
+    
+            //     setMessages((prev) =>
+            //         prev.map((msg) =>
+            //             msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
+            //         )
+            //     );
+            // });
+
         } catch (err) {
             console.error("Error during streaming:", err);
         } finally {
