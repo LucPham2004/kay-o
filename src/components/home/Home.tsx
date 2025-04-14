@@ -57,7 +57,7 @@ const Home = () => {
                     </div>
 
                     {/* Chat Input */}
-                    <div className={`w-full max-w-2xl rounded-l-xl rounded-r-[20px] flex items-end justify-center gap-2
+                    <div className={`w-full max-w-2xl rounded-[20px] flex items-end justify-center gap-2
                     ${isDarkMode ? 'bg-[#303030]' : 'shadow-xl border border-gray-200'}`}>
                         <textarea
                             className={`flex-grow w-full rounded-[20px] px-4 pt-3 pb-3.5 text-[15px] resize-none 

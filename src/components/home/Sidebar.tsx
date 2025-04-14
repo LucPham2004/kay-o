@@ -6,18 +6,21 @@ import { useApp } from "@/utils/AppContext";
 import SearchBar from "../common/SearchBar";
 import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
-import { IoMdSunny } from "react-icons/io";
+//import { IoMdSunny } from "react-icons/io";
 import { Link, useParams } from "react-router-dom";
 import { callDeleteConversation, callGetConversationsByUser, callUpdateConversation } from "@/services/ConversationService";
 import { ConversationResponseSchema } from "@/types/Conversation";
+import { VscLayoutSidebarLeft, VscLayoutSidebarLeftOff } from "react-icons/vsc";
 
 
 interface SidebarProps {
     openMenuId: string | null;
     onMenuToggle: (id: string) => void;
+    isSidebarOn: boolean;
+    toggleSidebar: () => void;
 }
 
-const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
+const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn, toggleSidebar }) => {
     const { conv_id } = useParams();
     const { isDarkMode, toggleDarkMode } = useApp();
     const user_id = '67efef29f0c4127199dd6fb5';
@@ -111,10 +114,11 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
     }, []);
 
     return (
-        <div className={`min-h-[100vh] max-h-[100vh] min-w-[280px] max-w-[280px] flex flex-col items-center 
+        <div className={`min-h-[100vh] max-h-[100vh] flex flex-col items-center 
                 p-2 pb-0 pe-1 rounded-l-xl shadow-sm
                 ${isDarkMode ? 'bg-[#1F1F1F] text-gray-300'
-                : 'bg-[#F9F9F9] text-black'}`}>
+                : 'bg-[#F9F9F9] text-black'}
+            `}>
 
             <div className="flex flex-row items-center p-2 py-0 pe-4 self-start w-full mb-2">
                 <div className={`flex self-start items-center gap-2 text-xl font-bold text-left w-[45%]
@@ -123,17 +127,17 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
                     <p>KayO</p>
                 </div>
                 <div className="relative flex flex-row gap-4 items-center justify-end w-[55%]">
-                    {/* <button onClick={() => setIsNewChatModalOpen(true)}
-                        className={`p-2 rounded-full text-xl 
-                            ${isDarkMode ? 'text-white bg-[#474747] hover:bg-[#5A5A5A]'
-                                : 'text-black bg-gray-100 hover:bg-gray-200'}`}>
-                        <BsPencilSquare />
-                    </button> */}
-                    <button className={` rounded-lg text-xl p-2
+                    {/* <button className={` rounded-lg text-xl p-2
                         ${isDarkMode ? 'text-yellow-400 hover:bg-[#5A5A5A]'
                             : 'text-yellow-400 hover:bg-gray-200'}`}
                         onClick={toggleDarkMode}>
                         {isDarkMode ? <IoMdSunny /> : <FaMoon />}
+                    </button> */}
+                    <button className={` rounded-lg text-xl p-2
+                        ${isDarkMode ? 'text-gray-200 hover:bg-[#5A5A5A]'
+                            : 'text-gray-800 hover:bg-gray-200'}`}
+                            onClick={toggleSidebar}>
+                        {isSidebarOn ? <VscLayoutSidebarLeft /> : <VscLayoutSidebarLeftOff />}
                     </button>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 // contexts/AppContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { defaultModels } from './constant';
 
 type AppContextType = {
     isDarkMode: boolean;
@@ -11,7 +12,6 @@ type AppContextType = {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const defaultModels = ['KayO (Gemini 2.0 Flash)', 'KayO (Deepseek R1)', 'KayO (LLaMA 4 Maverick)'];
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isDarkMode, setIsDarkMode] = useState<boolean>(() => localStorage.getItem('theme') === 'dark');

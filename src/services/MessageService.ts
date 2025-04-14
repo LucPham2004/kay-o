@@ -3,12 +3,13 @@ import instance from "./Axios-customize";
 
 const baseURL = 'http://localhost:8000';
 
-// Stream Chat with AI
-export const callStreamChatWithGemini = async (
+// Stream Chat with AI models
+export const callStreamChat = async (
+    model: 'gemini' | 'deepseek' | 'llama',
     data: ChatQuestion,
     onMessage: (chunk: string) => void
 ) => {
-    const response = await fetch(`${baseURL}/api/ai/gemini/stream`, {
+    const response = await fetch(`${baseURL}/api/ai/${model}/stream`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -34,66 +35,6 @@ export const callStreamChatWithGemini = async (
     }
 };
 
-export const callStreamChatWithDeepseek = async (
-    data: ChatQuestion,
-    onMessage: (chunk: string) => void
-) => {
-    const response = await fetch(`${baseURL}/api/ai/deepseek/stream`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-
-    if (!response.ok || !response.body) {
-        throw new Error("Failed to start stream");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-
-
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        onMessage(chunk);
-
-    }
-};
-
-
-export const callStreamChatWithLlama = async (
-    data: ChatQuestion,
-    onMessage: (chunk: string) => void
-) => {
-    const response = await fetch(`${baseURL}/api/ai/llama/stream`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-
-    if (!response.ok || !response.body) {
-        throw new Error("Failed to start stream");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-
-
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        onMessage(chunk);
-
-    }
-};
 
 // Chat with AI
 

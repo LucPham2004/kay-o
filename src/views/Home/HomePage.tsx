@@ -9,6 +9,11 @@ import Header from "@/components/home/Header";
 const HomePage = () => {
     const { isDarkMode } = useApp();
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+    const [isSidebarOn, setIsSidebarOn] = useState(true);
+
+    const toggleSidebar = () => {
+        setIsSidebarOn((prev) => !prev);
+    }
 
     const handleMenuToggle = (id: string) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
@@ -22,10 +27,23 @@ const HomePage = () => {
                 // close menu when click outside
                 onClick={() => setOpenMenuId(null)}> 
 
-                <Sidebar openMenuId={openMenuId} onMenuToggle={handleMenuToggle} />
+                <div className={`min-h-[100vh] max-h-[100vh] transition-all duration-300
+                    ${isSidebarOn ? 'w-[280px] max-w-[280px]' : 'w-0'} 
+                `}>
+                    <Sidebar 
+                        openMenuId={openMenuId} 
+                        onMenuToggle={handleMenuToggle} 
+                        isSidebarOn={isSidebarOn}
+                        toggleSidebar={toggleSidebar}
+                    />
+                </div>
                 
-                <div className="flex flex-col items-center justify-start h-full w-full overflow-hidden">
-                    <Header />
+                <div className="flex flex-col items-center justify-start h-full w-full 
+                    overflow-hidden transition-all duration-300">
+                    <Header 
+                        isSidebarOn={isSidebarOn}
+                        toggleSidebar={toggleSidebar}
+                    />
                     <Outlet/>
                 </div>
             </div>
