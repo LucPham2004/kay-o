@@ -1,4 +1,4 @@
-import { useTheme } from '@/utils/ThemeContext';
+import { useApp } from '@/utils/AppContext';
 import React from 'react';
 import { IoClose } from 'react-icons/io5';
 
@@ -9,7 +9,7 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-	const { isDarkMode  } = useTheme();
+	const { isDarkMode  } = useApp();
 	if (!isOpen) return null;
 
 	return (

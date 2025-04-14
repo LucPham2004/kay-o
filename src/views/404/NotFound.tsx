@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'; 
-import { useTheme } from '@/utils/ThemeContext';
+import { useApp } from '@/utils/AppContext';
 
 const NotFound = () => {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode } = useApp();
   return (
     <div
       className={`min-h-screen flex items-center justify-center ${

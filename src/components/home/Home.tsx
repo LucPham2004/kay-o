@@ -1,5 +1,5 @@
 import { callCreateConversation } from "@/services/ConversationService";
-import { useTheme } from "@/utils/ThemeContext";
+import { useApp } from "@/utils/AppContext";
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const user_id = '67efef29f0c4127199dd6fb5';
 
 const Home = () => {
-    const { isDarkMode } = useTheme();
+    const { isDarkMode } = useApp();
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
 

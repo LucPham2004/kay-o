@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTheme } from '@/utils/ThemeContext';
+import { useApp } from '@/utils/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@/utils/constant';
 import ForgotPassword from '@/components/auth/ForgotPassword';
@@ -15,7 +15,7 @@ const ForgotPasswordForm = () => {
     newPassword: '',
     confirmPassword: '',
   });
-  const { isDarkMode } = useTheme();
+  const { isDarkMode } = useApp();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

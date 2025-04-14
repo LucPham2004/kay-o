@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTheme } from '@/utils/ThemeContext';
+import { useApp } from '@/utils/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@/utils/constant';
 import { FcGoogle } from 'react-icons/fc';
@@ -13,7 +13,7 @@ import { doLoginSuccess } from '@/redux/slices/authSlice';
   }); 
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const { isDarkMode } = useTheme();  
+  const { isDarkMode } = useApp();  
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

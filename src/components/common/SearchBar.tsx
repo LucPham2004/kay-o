@@ -1,4 +1,4 @@
-import { useTheme } from '@/utils/ThemeContext';
+import { useApp } from '@/utils/AppContext';
 import React, { useEffect, useState } from 'react';
 import { IoIosSearch, IoMdClose } from "react-icons/io";
 
@@ -16,7 +16,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     onClear,
     debounceTime = 200,
 }) => {
-    const { isDarkMode } = useTheme();
+    const { isDarkMode } = useApp();
     const [keyword, setKeyword] = useState("");
 
     const handleClearInput = () => {

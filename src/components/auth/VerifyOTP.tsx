@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '@/utils/ThemeContext';
+import { useApp } from '@/utils/AppContext';
 
 interface VerifyOTPProps {
   otp: string;
@@ -10,7 +10,7 @@ interface VerifyOTPProps {
 }
 
 const VerifyOTP: React.FC<VerifyOTPProps> = ({ otp, onOtpChange, onSubmit, onResendOtp, isLoading  }) => {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode } = useApp();
   const [countdown, setCountdown] = useState(180); // 3 minutes in seconds
   const [canResend, setCanResend] = useState(false);
 

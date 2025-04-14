@@ -2,16 +2,16 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles/index.css';
 import App from './App';
-import { ThemeProvider } from './utils/ThemeContext';
+import { AppProvider } from './utils/AppContext';
 import { store } from './redux';
 import { Provider } from 'react-redux'; 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <ThemeProvider>
+      <AppProvider>
         <App />
-      </ThemeProvider>
+      </AppProvider>
     </Provider>
   </StrictMode>,
 )

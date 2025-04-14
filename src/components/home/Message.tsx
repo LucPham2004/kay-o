@@ -1,4 +1,4 @@
-import { useTheme } from "@/utils/ThemeContext";
+import { useApp } from "@/utils/AppContext";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Highlight } from "prism-react-renderer";
@@ -16,7 +16,7 @@ const ChatMessage: React.FC<MessageProps> = ({
     message
 }) => {
 
-    const { isDarkMode } = useTheme();
+    const { isDarkMode } = useApp();
     const oneDark = themes.oneDark;
     const oneLight = themes.oneLight;
 

@@ -2,7 +2,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import '../../styles/scrollbar.css';
 import { useEffect, useState } from "react";
 import { FaMoon } from "react-icons/fa";
-import { useTheme } from "@/utils/ThemeContext";
+import { useApp } from "@/utils/AppContext";
 import SearchBar from "../common/SearchBar";
 import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
@@ -19,7 +19,7 @@ interface SidebarProps {
 
 const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
     const { conv_id } = useParams();
-    const { isDarkMode, toggleDarkMode } = useTheme();
+    const { isDarkMode, toggleDarkMode } = useApp();
     const user_id = '67efef29f0c4127199dd6fb5';
 
     const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
@@ -111,7 +111,7 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle }) => {
     }, []);
 
     return (
-        <div className={`min-h-[100vh] max-h-[100vh] min-w-[280px] flex flex-col items-center 
+        <div className={`min-h-[100vh] max-h-[100vh] min-w-[280px] max-w-[280px] flex flex-col items-center 
                 p-2 pb-0 pe-1 rounded-l-xl shadow-sm
                 ${isDarkMode ? 'bg-[#1F1F1F] text-gray-300'
                 : 'bg-[#F9F9F9] text-black'}`}>

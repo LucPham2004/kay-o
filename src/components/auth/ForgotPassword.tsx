@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@/utils/ThemeContext';
+import { useApp } from '@/utils/AppContext';
 
 interface ForgotPasswordProps {
   email: string;
@@ -9,7 +9,7 @@ interface ForgotPasswordProps {
 }
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, onEmailChange, onSubmit, isLoading }) => {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode } = useApp();
 
   return (
     <form className="mt-8 space-y-6" onSubmit={onSubmit}>

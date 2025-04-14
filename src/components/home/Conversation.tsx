@@ -1,16 +1,17 @@
-import { useTheme } from "@/utils/ThemeContext";
+import { useApp } from "@/utils/AppContext";
 import { useEffect, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import ChatUI from "./ChatUI";
 import { useParams } from "react-router-dom";
-import { callGetMessages, callStreamChatWithDeepseek, callStreamChatWithGemini, callStreamChatWithLlama } from "@/services/MessageService";
+import { callGetMessages } from "@/services/MessageService";
 import { MessageResponseSchema } from "@/types/Message";
+import modelApiMap from "@/utils/ModelApiMap";
 
 
 
 const Conversation = () => {
     const { conv_id } = useParams();
-    const { isDarkMode } = useTheme();
+    const { isDarkMode, selectedModel } = useApp();
 
     const [messages, setMessages] = useState<MessageResponseSchema[]>([]);
     const [message, setMessage] = useState("");
@@ -36,37 +37,24 @@ const Conversation = () => {
 
         const streamedAnswerRef = { value: "" };
 
-        try {
-            // await callStreamChatWithGemini({ conv_id, question: message }, async (char: string) => {
-            //     streamedAnswerRef.value += char;
-        
-            //     setMessages((prev) =>
-            //         prev.map((msg) =>
-            //             msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
-            //         )
-            //     );
-            // });
+        // Map model ai đã chọn với hàm api tương ứng
+        const apiFunc = modelApiMap[selectedModel];
 
-            await callStreamChatWithDeepseek({ conv_id, question: message }, async (char: string) => {
+        if (!apiFunc) {
+            console.error(`Model "${selectedModel}" chưa được hỗ trợ.`);
+            return;
+        }
+
+        try {
+            await apiFunc({ conv_id, question: message }, async (char: string) => {
                 streamedAnswerRef.value += char;
-    
+
                 setMessages((prev) =>
                     prev.map((msg) =>
                         msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
                     )
                 );
             });
-
-            // await callStreamChatWithLlama({ conv_id, question: message }, async (char: string) => {
-            //     streamedAnswerRef.value += char;
-    
-            //     setMessages((prev) =>
-            //         prev.map((msg) =>
-            //             msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
-            //         )
-            //     );
-            // });
-
         } catch (err) {
             console.error("Error during streaming:", err);
         } finally {
@@ -97,37 +85,24 @@ const Conversation = () => {
     
         const streamedAnswerRef = { value: "" };
     
-        try {
-            // await callStreamChatWithGemini({ conv_id, question: initialMessage }, async (char: string) => {
-            //     streamedAnswerRef.value += char;
-    
-            //     setMessages((prev) =>
-            //         prev.map((msg) =>
-            //             msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
-            //         )
-            //     );
-            // });
+        // Map model ai đã chọn với hàm api tương ứng
+        const apiFunc = modelApiMap[selectedModel];
 
-            await callStreamChatWithDeepseek({ conv_id, question: initialMessage }, async (char: string) => {
+        if (!apiFunc) {
+            console.error(`Model "${selectedModel}" chưa được hỗ trợ.`);
+            return;
+        }
+
+        try {
+            await apiFunc({ conv_id, question: message }, async (char: string) => {
                 streamedAnswerRef.value += char;
-    
+
                 setMessages((prev) =>
                     prev.map((msg) =>
                         msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
                     )
                 );
             });
-            
-            // await callStreamChatWithLlama({ conv_id, question: message }, async (char: string) => {
-            //     streamedAnswerRef.value += char;
-    
-            //     setMessages((prev) =>
-            //         prev.map((msg) =>
-            //             msg._id === tempId ? { ...msg, answer: streamedAnswerRef.value } : msg
-            //         )
-            //     );
-            // });
-
         } catch (err) {
             console.error("Error during streaming:", err);
         } finally {

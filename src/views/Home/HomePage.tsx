@@ -1,4 +1,4 @@
-import { useTheme } from "@/utils/ThemeContext";
+import { useApp } from "@/utils/AppContext";
 import Sidebar from "@/components/home/Sidebar";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
@@ -7,7 +7,7 @@ import Header from "@/components/home/Header";
 
 
 const HomePage = () => {
-    const { isDarkMode } = useTheme();
+    const { isDarkMode } = useApp();
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
     const handleMenuToggle = (id: string) => {

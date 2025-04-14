@@ -1,4 +1,4 @@
-import { useTheme } from "@/utils/ThemeContext";
+import { useApp } from "@/utils/AppContext";
 import '../../styles/scrollbar.css';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -41,7 +41,7 @@ const ConversationList: React.FC<Props> = ({
     onDelete 
 }) => {
     const { conv_id } = useParams();
-    const { isDarkMode } = useTheme();
+    const { isDarkMode } = useApp();
     const grouped = groupConversations(conversations);
 
 

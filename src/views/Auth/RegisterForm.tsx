@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTheme } from '@/utils/ThemeContext';
+import { useApp } from '@/utils/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@/utils/constant';
 import { callRegister } from '@/services/AuthService';
@@ -11,7 +11,7 @@ const RegisterForm = () => {
     password: '',
     confirmPassword: '',
   });
-  const { isDarkMode } = useTheme();
+  const { isDarkMode } = useApp();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
