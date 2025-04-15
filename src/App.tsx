@@ -3,6 +3,7 @@ import Router from "./routers/Router";
 import { callGetAccount } from "./services/AuthService";
 import { useAppDispatch } from "./redux/hooks";
 import { doGetAccount } from "./redux/slices/authSlice";
+import { Bounce, ToastContainer } from "react-toastify";
 
 
 function App() {
@@ -14,16 +15,18 @@ function App() {
 
 	const getAccount = async () => {
 		const routesAut = ["/login", "/register", "/forgot-password"];
-		if(routesAut.includes(window.location.pathname))
+		if (routesAut.includes(window.location.pathname))
 			return;
 		const res = await callGetAccount();
-		if(res.is_valid) {
+		if (res.is_valid) {
 			dispatch(doGetAccount(res.user));
 		}
 	}
 
 	return (
-		<Router/>
+		<>
+			<Router />
+		</>
 	);
 }
 

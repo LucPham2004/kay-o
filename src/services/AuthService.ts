@@ -1,4 +1,4 @@
-import { ILoginSchema, ILoginResponseSchema, IRegisterSchema, IRegisterResponseSchema, IForgotPasswordSchema, IForgotPasswordResponseSchema, IVerifyOTPSchema, IVerifyOTPResponseSchema, IResetPasswordSchema, IResetPasswordResponseSchema, IGetAccountResponseSchema } from "@/types/Auth";
+import { ILoginSchema, ILoginResponseSchema, IRegisterSchema, IRegisterResponseSchema, IForgotPasswordSchema, IForgotPasswordResponseSchema, IVerifyOTPSchema, IVerifyOTPResponseSchema, IResetPasswordSchema, IResetPasswordResponseSchema, IGetAccountResponseSchema, IChangePasswordSchema, IChangePasswordResponseSchema } from "@/types/Auth";
 import instance from "./Axios-customize";
 
 export const callLogin = async (data: ILoginSchema) => {
@@ -30,5 +30,10 @@ export const callGetAccount = async () => {
     const response = await instance.get<IGetAccountResponseSchema>("/api/auths/getAccount");
     return response.data;
 };
+
+export const callChangePassword = async (data: IChangePasswordSchema) =>  {
+    const response = await instance.patch<IChangePasswordResponseSchema>("/api/auths/change-password", data);
+    return response.data;
+}
 
 

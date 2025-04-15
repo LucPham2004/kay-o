@@ -65,4 +65,14 @@ export interface IResetPasswordResponseSchema {
 
 export interface IGetAccountResponseSchema extends Omit<ILoginResponseSchema, "access_token"> {}
 
+export interface IChangePasswordSchema {
+    current_password: string;
+    new_password: string, 
+    confirm_password: string;
+}
+
+export interface IChangePasswordResponseSchema {
+    message: string;
+    is_valid: boolean;
+}
 
