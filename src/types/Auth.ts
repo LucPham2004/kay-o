@@ -12,7 +12,7 @@ export interface ILoginResponseSchema {
         username: string;
         avatar?: string;
     };
-    accessToken: string;
+    access_token: string;
     is_valid: boolean;      
 }
 
@@ -63,5 +63,6 @@ export interface IResetPasswordResponseSchema {
     is_valid: boolean;
 }
 
+export interface IGetAccountResponseSchema extends Omit<ILoginResponseSchema, "access_token"> {}
 
 

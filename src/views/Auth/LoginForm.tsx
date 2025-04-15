@@ -26,7 +26,7 @@ import { doLoginSuccess } from '@/redux/slices/authSlice';
     const response = await callLogin(data);
     console.log(response);  
     if(response.is_valid === true){
-      dispatch(doLoginSuccess({ user: response.user, accessToken: response.accessToken }));
+      dispatch(doLoginSuccess({ user: response.user, accessToken: response.access_token }));
       navigate(routes.DEFAULT);
     } else { 
       console.log(response);
