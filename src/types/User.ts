@@ -15,6 +15,7 @@ export interface UserResponseSchema {
 }
 
 export interface UpdateUserSchema {
+    username?: string
     email?: string | null;
     avatar_url?: string | null;
     update_at?: string;

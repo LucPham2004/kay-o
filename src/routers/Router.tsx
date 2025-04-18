@@ -19,7 +19,7 @@ const Router = () => {
         <Route path={routes.FORGOT_PASSWORD} element={<Auth />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-   </BrowserRouter>
+    </BrowserRouter>
   )
 }
 

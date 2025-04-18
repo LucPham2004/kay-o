@@ -4,7 +4,7 @@ import { FaMoon } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';
 import { VscLayoutSidebarLeft, VscLayoutSidebarLeftOff } from 'react-icons/vsc';
-
+import AccountModal from '../common/AccountModal';
 
 interface HeaderProps {
     isSidebarOn: boolean;
@@ -15,13 +15,20 @@ const Header:React.FC<HeaderProps> = ({ isSidebarOn, toggleSidebar }) => {
     const { isDarkMode, toggleDarkMode, selectedModel, setSelectedModel, availableModels } = useApp();
     const [showModelDropdown, setShowModelDropdown] = useState(false);
     const [showMenuDropdown, setShowMenuDropdown] = useState(false);
+    const [showAccountModal, setShowAccountModal] = useState(false);
     
     const toggleMenuDropdown = () => {
         setShowMenuDropdown((prev) => !prev);
         setShowModelDropdown(false);
     }
+
     const toggleModelDropdown = () => {
         setShowModelDropdown((prev) => !prev);
+        setShowMenuDropdown(false);
+    }
+
+    const handleAccountClick = () => {
+        setShowAccountModal(true);
         setShowMenuDropdown(false);
     }
 
@@ -88,9 +95,11 @@ const Header:React.FC<HeaderProps> = ({ isSidebarOn, toggleSidebar }) => {
                         overflow-hidden text-sm font-semibold
                         ${isDarkMode ? 'bg-[#2f2f2f] text-white' : 'bg-white text-black'}`}>
                             
-                        <button className={`px-4 py-3 cursor-pointer w-full flex items-center gap-2 rounded-md
-                            ${isDarkMode ? 'text-white hover:bg-[#545454]' 
-                                : 'text-black hover:bg-gray-200'}`}>
+                        <button 
+                            onClick={handleAccountClick}
+                            className={`px-4 py-3 cursor-pointer w-full flex items-center gap-2 rounded-md
+                                ${isDarkMode ? 'text-white hover:bg-[#545454]' 
+                                    : 'text-black hover:bg-gray-200'}`}>
                             <img src='/kayo.webp' alt='avatar' className='w-6 h-6 rounded-full '/>
                             <p>Tài khoản</p>
                         </button>
@@ -129,6 +138,11 @@ const Header:React.FC<HeaderProps> = ({ isSidebarOn, toggleSidebar }) => {
                     </div>
                 )}
             </div>
+
+            <AccountModal 
+                isOpen={showAccountModal}
+                onClose={() => setShowAccountModal(false)}
+            />
         </div>
     );
 };

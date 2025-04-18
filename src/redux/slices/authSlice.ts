@@ -9,14 +9,12 @@ interface User {
 
 interface AuthState {
   user: User | null;
-  accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
-  accessToken: null,
   isAuthenticated: false,
   isLoading: false,
 };
@@ -29,17 +27,18 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.isAuthenticated = true;
       state.user = action.payload.user;
-      state.accessToken = action.payload.accessToken;
       window.localStorage.setItem('access_token', action.payload.accessToken);
     },    
+    doGetAccount: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+    },
     doLogout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      state.accessToken = null;
       window.localStorage.removeItem('access_token');
     }
   },
 });
 
-export const {doLoginSuccess, doLogout } = authSlice.actions;
+export const {doLoginSuccess, doLogout, doGetAccount } = authSlice.actions;
 export default authSlice.reducer; 
