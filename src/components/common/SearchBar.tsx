@@ -55,7 +55,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 			{keyword.length > 0 && (
 				<button
 					type="button"
-					className="py-1 pe-1 rounded-full text-lg "
+					className="py-1 pe-2 rounded-full text-lg "
 					onClick={handleClearInput}
 				>
 					<IoMdClose /> 

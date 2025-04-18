@@ -71,7 +71,7 @@ const ConversationList: React.FC<Props> = ({
                         key={conversation._id}
                         className={`relative flex justify-between items-center p-2 rounded-lg cursor-pointer transition group
                             ${conv_id == conversation._id 
-                                ? `${isDarkMode ? 'bg-[#333333]' : 'bg-gray-300'}` 
+                                ? `${isDarkMode ? 'bg-[#333333]' : 'bg-[#e0e0e0]'}` 
                                 : ``}
                             ${isDarkMode ? 'hover:bg-[#3F3F3F]' : 'hover:bg-gray-200'}`}
                     >

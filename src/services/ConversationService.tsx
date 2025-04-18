@@ -12,6 +12,11 @@ export const callGetConversationsByUser = async (userId: string) => {
     return (await instance.get<ConversationResponseSchema[]>(`/api/conversations/all/${userId}`)).data;
 };
 
+// Tìm kiếm hội thoại
+export const callSearchConversationsByUser = async (userId: string, keyword: string) => {
+    return (await instance.get<ConversationResponseSchema[]>(`/api/conversations/search/${userId}?keyword=${encodeURIComponent(keyword)}`)).data;
+};
+
 // Lấy tất cả cuộc trò chuyện
 export const callGetAllConversations = async () => {
     return (await instance.get<ConversationResponseSchema[]>("/api/conversations/all")).data;

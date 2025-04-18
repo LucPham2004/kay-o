@@ -11,6 +11,11 @@ export const callGetAllUsers = async () => {
     return (await instance.get<UserResponseSchema[]>(`/api/users/all`)).data;
 };
 
+// Tìm kiếm người dùng
+export const callSearchUsers = async (keyword: string) => {
+    return (await instance.get<UserResponseSchema[]>(`/api/users/search?keyword=${keyword}`)).data;
+};
+
 // Cập nhật người dùng
 export const callUpdateUser = async (userId: string, data: UpdateUserSchema) => {
     return (await instance.put<UserResponseSchema>(`/api/users/${userId}`, data)).data;

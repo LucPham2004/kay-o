@@ -62,9 +62,9 @@ const Header:React.FC<HeaderProps> = ({ isSidebarOn, toggleSidebar }) => {
                                     setShowModelDropdown(false);
                                 }}
                                 className={`px-4 py-3 cursor-pointer rounded-md 
-                                    ${selectedModel === model ? 'font-bold bg-[#454647]' : ''}
+                                    ${selectedModel === model ? `font-bold ${isDarkMode ? 'bg-[#454647]': ''}` : ''}
                                     ${isDarkMode ? 'text-white hover:bg-[#545454]' 
-                                        : 'text-black bg-gray-100 hover:bg-gray-200'}
+                                        : 'text-black hover:bg-gray-200'}
                                 `}>
                                 {model}
                             </div>

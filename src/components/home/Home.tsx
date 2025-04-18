@@ -10,6 +10,7 @@ const user_id = '67efef29f0c4127199dd6fb5';
 const Home = () => {
     const { isDarkMode } = useApp();
     const [message, setMessage] = useState("");
+    const [hideTips, setHideTips] = useState(false);
     const navigate = useNavigate();
 
     const handleSend = async () => {
@@ -88,25 +89,27 @@ const Home = () => {
                 </div>
             </div>
 
+            {!hideTips && (
             <div className="max-h-[40vh] min-h-[40vh] w-full flex flex-col items-center justify-center gap-4">
                 <div className="absolute flex flex-col justify-center items-center">
                     <div className="flex gap-6">
                         {/* Card 1 */}
-                        <div className={`p-6 w-64 rounded-xl shadow-md
+                        <div className={`p-6 w-80 rounded-xl shadow-md
                         ${isDarkMode ? 'bg-[#303030] text-gray-200' : 'bg-gray-200 text-black'}`}>
                             <div className="flex flex-col items-center text-center">
                                 <div className="flex gap-2 mb-2">
-                                    <span className="bg-orange-400 text-black px-2 py-1 rounded-full text-xs">Mistral Small 3</span>
-                                    <span className="bg-pink-500 text-white px-2 py-1 rounded-full text-xs">Llama 3.3</span>
+                                    <span className="bg-orange-400 font-semibold text-black px-2 py-1 rounded-full text-xs">Gemini 2.0 Flash</span>
+                                    <span className="bg-pink-500 font-semibold text-white px-2 py-1 rounded-full text-xs">Llama 4 Marverick</span>
+                                    <span className="bg-blue-500 font-semibold text-black px-2 py-1 rounded-full text-xs">Deepseek R1</span>
                                 </div>
                                 <p className="text-sm">
-                                    Blah blah blah blah blah Blah blah blah blsdfdsah blah Blah blah blah blah blah
+                                    Thoải mái lựa chọn Mô hình AI để trò chuyện với Gemini 2.0 Flash, Deepseek R1 hay Llama 4 Marverick.
                                 </p>
                             </div>
                         </div>
 
                         {/* Card 2 */}
-                        <div className={`p-6 w-64 rounded-xl shadow-md
+                        <div className={`p-6 w-80 rounded-xl shadow-md
                         ${isDarkMode ? 'bg-[#303030] text-gray-200' : 'bg-gray-200 text-black'}`}>
                             <div className="flex flex-col items-center text-center">
                                 <IoShieldCheckmarkSharp className="text-green-400 mb-2" size={32} />
@@ -116,9 +119,13 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                    <p className="text-center text-gray-500 mt-4 cursor-pointer text-sm">Hide Tips</p>
+                    <p className="text-center text-gray-500 mt-4 cursor-pointer text-sm"
+                        onClick={() => setHideTips(true)}>
+                        Hide Tips
+                    </p>
                 </div>
             </div>
+            )}
 
             {/* Footer */}
             <p className="absolute bottom-4 text-sm text-gray-400">

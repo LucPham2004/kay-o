@@ -8,7 +8,7 @@ import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
 //import { IoMdSunny } from "react-icons/io";
 import { Link, useParams } from "react-router-dom";
-import { callDeleteConversation, callGetConversationsByUser, callUpdateConversation } from "@/services/ConversationService";
+import { callDeleteConversation, callGetConversationsByUser, callSearchConversationsByUser, callUpdateConversation } from "@/services/ConversationService";
 import { ConversationResponseSchema } from "@/types/Conversation";
 import { VscLayoutSidebarLeft, VscLayoutSidebarLeftOff } from "react-icons/vsc";
 
@@ -26,7 +26,7 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
     const user_id = '67efef29f0c4127199dd6fb5';
 
     const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
-    const [searchedConversations, setSearchedConversations] = useState<[] | null>(null);
+    const [searchedConversations, setSearchedConversations] = useState<ConversationResponseSchema[] | null>(null);
 
     const [conversations, setConversations] = useState<ConversationResponseSchema[]>([]);
 
@@ -60,8 +60,20 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
     };
 
 
-    const handleConversationSearch = async () => {
-
+    const handleConversationSearch = async (keyword: string) => {
+        if (user_id) {
+            if (keyword.trim() === "") {
+                setSearchedConversations(null);
+                return;
+            }
+            try {
+                const data = await callSearchConversationsByUser(user_id, keyword);
+                setSearchedConversations(data || []);
+                console.log(data);
+            } catch (error) {
+                console.error("Error searching conversations:", error);
+            }
+        }
     };
 
     const handleClearSearch = () => {
@@ -113,6 +125,8 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
         };
     }, []);
 
+    
+
     return (
         <div className={`min-h-[100vh] max-h-[100vh] flex flex-col items-center 
                 p-2 pb-0 pe-1 rounded-l-xl shadow-sm
@@ -120,7 +134,7 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
                 : 'bg-[#F9F9F9] text-black'}
             `}>
 
-            <div className="flex flex-row items-center p-2 py-0 pe-4 self-start w-full mb-2">
+            <div className="flex flex-row items-center p-2 py-0 pe-4 self-start w-full">
                 <div className={`flex self-start items-center gap-2 text-xl font-bold text-left w-[45%]
                         ${isDarkMode ? 'text-white' : 'text-black'}`}>
                     <img src="/kayo.webp" className="w-6 h-6 rounded-full"></img>
@@ -158,8 +172,18 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
             </div>
 
 
-            {searchedConversations && searchedConversations?.length > 0 ? (
-                <></>
+            {searchedConversations ? (
+                searchedConversations?.length > 0 ? (
+                    <ConversationList 
+                        conversations={searchedConversations}
+                        openMenuId={openMenuId}
+                        onMenuToggle={onMenuToggle} 
+                        onRename={handleRename} 
+                        onDelete={handleDelete} 
+                    />
+                ) : (
+                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Không tìm thấy hội thoại nào</p>
+                    )
             ) : (
                 <ConversationList 
                     conversations={conversations}
