@@ -5,6 +5,9 @@ import { FiLogOut } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';
 import { VscLayoutSidebarLeft, VscLayoutSidebarLeftOff } from 'react-icons/vsc';
 import AccountModal from '../common/AccountModal';
+import { useNavigate } from 'react-router-dom';
+import { TbDashboard, TbLayoutDashboard } from 'react-icons/tb';
+import { routes } from '@/utils/constant';
 
 interface HeaderProps {
     isSidebarOn: boolean;
@@ -16,6 +19,7 @@ const Header:React.FC<HeaderProps> = ({ isSidebarOn, toggleSidebar }) => {
     const [showModelDropdown, setShowModelDropdown] = useState(false);
     const [showMenuDropdown, setShowMenuDropdown] = useState(false);
     const [showAccountModal, setShowAccountModal] = useState(false);
+    const navigate = useNavigate();
     
     const toggleMenuDropdown = () => {
         setShowMenuDropdown((prev) => !prev);
@@ -102,6 +106,15 @@ const Header:React.FC<HeaderProps> = ({ isSidebarOn, toggleSidebar }) => {
                                     : 'text-black hover:bg-gray-200'}`}>
                             <img src='/kayo.webp' alt='avatar' className='w-6 h-6 rounded-full '/>
                             <p>Tài khoản</p>
+                        </button>
+
+                        <button 
+                            onClick={() => navigate(routes.ADMIN)}
+                            className={`px-4 py-3 cursor-pointer w-full flex items-center gap-2 rounded-md
+                                ${isDarkMode ? 'text-white hover:bg-[#545454]' 
+                                    : 'text-black hover:bg-gray-200'}`}>
+                            <TbLayoutDashboard className='text-xl'/>
+                            <p>Dashboard</p>
                         </button>
 
                         <hr className={`border my-2 ${isDarkMode ? 'border-[#545454]' : 'border-gray-100'}`}></hr>

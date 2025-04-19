@@ -4,6 +4,9 @@ export const routes = {
     LOGIN: '/login',
     REGISTER: '/register',
     FORGOT_PASSWORD: '/forgot-password',
+    ADMIN: "admin",
+    ADMIN_USER: "user",
+    ADMIN_SETTING: "setting"
 }
 
 export const defaultModels = [
