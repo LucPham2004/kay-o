@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApp } from '@/utils/AppContext';
 import { 
     TbEdit, 
@@ -10,6 +10,7 @@ import {
     TbChevronsLeft,
     TbChevronsRight
 } from 'react-icons/tb';
+import { callGetAllUsers } from '@/services/UserService';
 
 interface User {
     id: string;
@@ -47,6 +48,10 @@ const UserAdminPage: React.FC = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
+    useEffect(() => {
+        getAllUsers();
+    }, []);
+
     // Filter users based on search term
     const filteredUsers = users.filter(user =>
         user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,6 +88,10 @@ const UserAdminPage: React.FC = () => {
         setEditingUser(null);
     };
 
+    const getAllUsers = async () => {
+        const res = await callGetAllUsers();
+        console.log(res);
+    }
     return (
         <div className="space-y-4">
             {/* Header */}
