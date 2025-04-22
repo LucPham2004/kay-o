@@ -4,6 +4,7 @@ interface User {
   _id: string;
   username: string;
   email: string;
+  role: string;
   avatar?: string;
 }
 
@@ -30,6 +31,7 @@ const authSlice = createSlice({
       window.localStorage.setItem('access_token', action.payload.accessToken);
     },    
     doGetAccount: (state, action: PayloadAction<User>) => {
+      state.isAuthenticated = true;
       state.user = action.payload;
     },
     doLogout: (state) => {
