@@ -5,7 +5,7 @@ import ChatUI from "./ChatUI";
 import { useParams } from "react-router-dom";
 import { callGetMessages } from "@/services/MessageService";
 import { MessageResponseSchema } from "@/types/Message";
-import modelApiMap from "@/utils/ModelApiMap";
+import modelApiMap from "@/utils/modelApiMap";
 
 
 
@@ -94,7 +94,7 @@ const Conversation = () => {
         }
 
         try {
-            await apiFunc({ conv_id, question: message }, async (char: string) => {
+            await apiFunc({ conv_id, question: initialMessage }, async (char: string) => {
                 streamedAnswerRef.value += char;
 
                 setMessages((prev) =>
