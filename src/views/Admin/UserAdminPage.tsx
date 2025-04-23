@@ -11,42 +11,18 @@ import {
     TbChevronsRight
 } from 'react-icons/tb';
 import { callGetAllUsers } from '@/services/UserService';
+import { UserResponseSchema } from '@/types/User';
 
-interface User {
-    id: string;
-    username: string;
-    email: string;
-    role: string;
-    status: 'active' | 'inactive';
-    createdAt: string;
-}
 
 const UserAdminPage: React.FC = () => {
     const { isDarkMode } = useApp();
-    const [users, setUsers] = useState<User[]>([
-        {
-            id: '1',
-            username: 'user1',
-            email: 'user1@example.com',
-            role: 'user',
-            status: 'active',
-            createdAt: '2024-01-01'
-        },
-        {
-            id: '2',
-            username: 'user2',
-            email: 'user2@example.com',
-            role: 'admin',
-            status: 'active',
-            createdAt: '2024-01-02'
-        }
-    ]);
+    const [users, setUsers] = useState<UserResponseSchema[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
-    const [editingUser, setEditingUser] = useState<User | null>(null);
+    const [editingUser, setEditingUser] = useState<UserResponseSchema | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [userToDelete, setUserToDelete] = useState<User | null>(null);
+    const [userToDelete, setUserToDelete] = useState<UserResponseSchema | null>(null);
 
     useEffect(() => {
         getAllUsers();
@@ -64,33 +40,35 @@ const UserAdminPage: React.FC = () => {
     const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
-    const handleEdit = (user: User) => {
+    const handleEdit = (user: UserResponseSchema) => {
         setEditingUser(user);
     };
 
-    const handleDelete = (user: User) => {
+    const handleDelete = (user: any) => {
         setUserToDelete(user);
         setShowDeleteModal(true);
     };
 
     const confirmDelete = () => {
         if (userToDelete) {
-            setUsers(users.filter(user => user.id !== userToDelete.id));
+            setUsers(users.filter(user => user._id !== userToDelete._id));
             setShowDeleteModal(false);
             setUserToDelete(null);
         }
     };
 
-    const handleSave = (updatedUser: User) => {
+    const handleSave = (updatedUser: UserResponseSchema) => {
         setUsers(users.map(user => 
-            user.id === updatedUser.id ? updatedUser : user
+            user._id === updatedUser._id ? updatedUser : user
         ));
         setEditingUser(null);
     };
 
     const getAllUsers = async () => {
         const res = await callGetAllUsers();
-        console.log(res);
+        if(res.length > 0) {
+            setUsers(res)
+        }
     }
     return (
         <div className="space-y-4">
@@ -163,7 +141,7 @@ const UserAdminPage: React.FC = () => {
                     </thead>
                     <tbody>
                         {currentUsers.map((user) => (
-                            <tr key={user.id} className={`border-b
+                            <tr key={user._id} className={`border-b
                                 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
                                 <td className={`px-6 py-4 ${isDarkMode ? 'text-white' : 'text-black'}`}>
                                     {user.username}
@@ -176,19 +154,19 @@ const UserAdminPage: React.FC = () => {
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className={`px-2 py-1 rounded-full text-xs
-                                        ${user.status === 'active'
+                                        ${user.status === 'inactive'
                                             ? isDarkMode
+                                            ? 'bg-red-900 text-red-300'
+                                                : 'bg-red-100 text-red-800'
+                                            : isDarkMode
                                                 ? 'bg-green-900 text-green-300'
                                                 : 'bg-green-100 text-green-800'
-                                            : isDarkMode
-                                                ? 'bg-red-900 text-red-300'
-                                                : 'bg-red-100 text-red-800'
                                         }`}>
-                                        {user.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                                        {user.status === 'inactive' ? 'Không hoạt động' : 'Hoạt động'}
                                     </span>
                                 </td>
                                 <td className={`px-6 py-4 ${isDarkMode ? 'text-white' : 'text-black'}`}>
-                                    {user.createdAt}
+                                    {user.created_at}
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-2">
