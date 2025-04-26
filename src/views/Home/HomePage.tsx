@@ -3,6 +3,7 @@ import Sidebar from "@/components/home/Sidebar";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "@/components/home/Header";
+import { useAppSelector } from "@/redux/hooks";
 
 
 
@@ -10,6 +11,7 @@ const HomePage = () => {
     const { isDarkMode } = useApp();
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
     const [isSidebarOn, setIsSidebarOn] = useState(true);
+    const auth = useAppSelector(state => state.auth);
 
     const toggleSidebar = () => {
         setIsSidebarOn((prev) => !prev);
@@ -27,6 +29,7 @@ const HomePage = () => {
                 // close menu when click outside
                 onClick={() => setOpenMenuId(null)}> 
 
+            {auth.isAuthenticated && (
                 <div className={`min-h-[100vh] max-h-[100vh] transition-all duration-300
                     ${isSidebarOn ? 'w-[280px] max-w-[280px]' : 'w-0'} 
                 `}>
@@ -37,8 +40,9 @@ const HomePage = () => {
                         toggleSidebar={toggleSidebar}
                     />
                 </div>
+            )}
                 
-                <div className="flex flex-col items-center justify-start h-full w-full 
+                <div className="flex flex-col items-center justify-start h-full w-full me-[2px]
                     overflow-hidden transition-all duration-300">
                     <Header 
                         isSidebarOn={isSidebarOn}

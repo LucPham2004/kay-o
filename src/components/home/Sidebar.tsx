@@ -7,10 +7,11 @@ import SearchBar from "../common/SearchBar";
 import Modal from "../common/Modal";
 import ConversationList from "./ConversationList";
 //import { IoMdSunny } from "react-icons/io";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { callDeleteConversation, callGetConversationsByUser, callSearchConversationsByUser, callUpdateConversation } from "@/services/ConversationService";
 import { ConversationResponseSchema } from "@/types/Conversation";
 import { VscLayoutSidebarLeft, VscLayoutSidebarLeftOff } from "react-icons/vsc";
+import { useAppSelector } from "@/redux/hooks";
 
 
 interface SidebarProps {
@@ -23,7 +24,9 @@ interface SidebarProps {
 const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn, toggleSidebar }) => {
     const { conv_id } = useParams();
     const { isDarkMode, toggleDarkMode } = useApp();
-    const user_id = '67efef29f0c4127199dd6fb5';
+    const auth = useAppSelector(state => state.auth);
+    
+    const navigate = useNavigate();
 
     const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
     const [searchedConversations, setSearchedConversations] = useState<ConversationResponseSchema[] | null>(null);
@@ -52,6 +55,7 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
             try {
                 await callDeleteConversation(id);
                 setConversations((prev) => prev.filter((c) => c._id !== id));
+                navigate(`/`);
             } catch (error) {
                 console.error("Lỗi khi xoá hội thoại:", error);
                 alert("Xoá thất bại. Vui lòng thử lại.");
@@ -61,13 +65,13 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
 
 
     const handleConversationSearch = async (keyword: string) => {
-        if (user_id) {
+        if (auth.user?._id) {
             if (keyword.trim() === "") {
                 setSearchedConversations(null);
                 return;
             }
             try {
-                const data = await callSearchConversationsByUser(user_id, keyword);
+                const data = await callSearchConversationsByUser(auth.user?._id, keyword);
                 setSearchedConversations(data || []);
                 console.log(data);
             } catch (error) {
@@ -101,19 +105,20 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
         let isMounted = true;
         const fetchConversations = async () => {
             try {
-                const response = await callGetConversationsByUser(user_id);
-                console.log(response);
-                if (!isMounted) return;
+                if (auth.user?._id) {
+                    const response = await callGetConversationsByUser(auth.user?._id);
+                    console.log(response);
+                    if (!isMounted) return;
 
-                const newConversations = response.reverse() ?? [];
+                    const newConversations = response.reverse() ?? [];
 
-                setConversations((prev) => {
-                    const uniqueConversations = [...prev, ...newConversations].filter(
-                        (conv, index, self) => index === self.findIndex(c => c._id === conv._id)
-                    );
-                    return uniqueConversations;
-                });
-
+                    setConversations((prev) => {
+                        const uniqueConversations = [...prev, ...newConversations].filter(
+                            (conv, index, self) => index === self.findIndex(c => c._id === conv._id)
+                        );
+                        return uniqueConversations;
+                    });
+                }
             } catch (err) {
                 console.error("Lỗi khi lấy danh sách hội thoại:", err);
             }
@@ -125,7 +130,7 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
         };
     }, []);
 
-    
+
 
     return (
         <div className={`min-h-[100vh] max-h-[100vh] flex flex-col items-center 
@@ -141,24 +146,22 @@ const Sidebar:React.FC<SidebarProps> = ({ openMenuId, onMenuToggle, isSidebarOn,
                     <p>KayO</p>
                 </div>
                 <div className="relative flex flex-row gap-4 items-center justify-end w-[55%]">
-                    {/* <button className={` rounded-lg text-xl p-2
-                        ${isDarkMode ? 'text-yellow-400 hover:bg-[#5A5A5A]'
-                            : 'text-yellow-400 hover:bg-gray-200'}`}
-                        onClick={toggleDarkMode}>
-                        {isDarkMode ? <IoMdSunny /> : <FaMoon />}
-                    </button> */}
-                    <button className={` rounded-lg text-xl p-2
-                        ${isDarkMode ? 'text-gray-200 hover:bg-[#5A5A5A]'
-                            : 'text-gray-800 hover:bg-gray-200'}`}
-                            onClick={toggleSidebar}>
-                        {isSidebarOn ? <VscLayoutSidebarLeft /> : <VscLayoutSidebarLeftOff />}
-                    </button>
+                    {auth.isAuthenticated && (
+                        <button className={` rounded-lg text-xl p-2
+                            ${isDarkMode ? 'text-gray-200 hover:bg-[#5A5A5A]'
+                                : 'text-gray-800 hover:bg-gray-200'}`}
+                                onClick={toggleSidebar}>
+                            {isSidebarOn ? <VscLayoutSidebarLeft /> : <VscLayoutSidebarLeftOff />}
+                        </button>
+                    )}
                 </div>
             </div>
 
-            <div className="flex flex-col items-center w-full h-fit p-2 pe-4">
-                <SearchBar placeholder="Tìm kiếm hội thoại..." onSearch={handleConversationSearch} onClear={handleClearSearch} />
-            </div>
+            {auth.isAuthenticated && (
+                <div className="flex flex-col items-center w-full h-fit p-2 pe-4">
+                    <SearchBar placeholder="Tìm kiếm hội thoại..." onSearch={handleConversationSearch} onClear={handleClearSearch} />
+                </div>
+            )}
 
             <div className={`flex flex-col items-center w-full h-fit p-2 pe-4`}>
                 <Link to={`/`} className="w-full">

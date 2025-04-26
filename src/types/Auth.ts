@@ -11,6 +11,7 @@ export interface ILoginResponseSchema {
         email: string;
         username: string;
         avatar?: string;
+        role: string;
     };
     access_token: string;
     is_valid: boolean;      

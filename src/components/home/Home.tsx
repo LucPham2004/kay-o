@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/redux/hooks";
 import { callCreateConversation } from "@/services/ConversationService";
 import { useApp } from "@/utils/AppContext";
 import { useState } from "react";
@@ -8,26 +9,34 @@ import { useNavigate } from "react-router-dom";
 const user_id = '67efef29f0c4127199dd6fb5';
 
 const Home = () => {
+    const auth = useAppSelector(state => state.auth);
     const { isDarkMode } = useApp();
     const [message, setMessage] = useState("");
     const [hideTips, setHideTips] = useState(false);
     const navigate = useNavigate();
 
-    const handleSend = async () => {
-        if (!message.trim()) return;
-
+    const handleSend = async (customMessage?: string) => {
+        const finalMessage = customMessage ?? message;
+    
+        if (!finalMessage.trim()) return;
+    
+        if (!auth.isAuthenticated) {
+            alert("Bạn hãy đăng nhập để trò chuyện với KayO nhé!");
+            return;
+        }
+    
         try {
             const createRes = await callCreateConversation({
                 user_id: user_id,
-                name: message.slice(0, 30),
+                name: finalMessage.slice(0, 30),
             });
             console.log("create " + JSON.stringify(createRes));
-
+    
             const conversationId = createRes._id;
-
-            sessionStorage.setItem('initialMessage', message);
+    
+            sessionStorage.setItem('initialMessage', finalMessage);
             sessionStorage.setItem('newConv', JSON.stringify(createRes));
-
+    
             navigate(`/c/${conversationId}`);
         } catch (error) {
             console.error("Lỗi khi gửi tin nhắn:", error);
@@ -46,12 +55,18 @@ const Home = () => {
                     {/* Buttons */}
                     <div className="flex gap-4 mb-4">
                         <button className={`flex w-[328px] items-center gap-2 px-4 py-2 rounded-lg shadow
-                        ${isDarkMode ? 'bg-[#303030] text-gray-200' : 'bg-gray-200 text-gray-600'}`}>
+                            ${isDarkMode ? 'bg-[#303030] text-gray-200' : 'bg-gray-200 text-gray-600'}`}
+                            onClick={async () => {
+                                await handleSend("Hãy giúp tôi lên kế hoạch cho một chuyến du lịch");
+                            }}>
                             <span className="text-xl">➤</span>
                             <span className="text-sm font-semibold">Lên kế hoạch cho một chuyến du lịch!</span>
                         </button>
                         <button className={`flex w-[328px] items-center gap-2 px-4 py-2 rounded-lg shadow
-                        ${isDarkMode ? 'bg-[#303030] text-gray-200' : 'bg-gray-200 text-gray-600'}`}>
+                            ${isDarkMode ? 'bg-[#303030] text-gray-200' : 'bg-gray-200 text-gray-600'}`}
+                            onClick={async () => {
+                                await handleSend("Hãy giúp tôi lập nên lộ trình học tập, nghiên cứu");
+                            }}>
                             <span className="text-xl">➤</span>
                             <span className="text-sm font-semibold">Lộ trình học tập, nghiên cứu</span>
                         </button>
@@ -81,7 +96,7 @@ const Home = () => {
                                 }
                             }}
                         />
-                        <button onClick={handleSend}
+                        <button onClick={() => handleSend}
                             className={`p-4 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-gray-800 text-white'}`}>
                             <FaPaperPlane />
                         </button>
@@ -100,10 +115,10 @@ const Home = () => {
                                 <div className="flex gap-2 mb-2">
                                     <span className="bg-orange-400 font-semibold text-black px-2 py-1 rounded-full text-xs">Gemini 2.0 Flash</span>
                                     <span className="bg-pink-500 font-semibold text-white px-2 py-1 rounded-full text-xs">Llama 4 Marverick</span>
-                                    <span className="bg-blue-500 font-semibold text-black px-2 py-1 rounded-full text-xs">Deepseek R1</span>
+                                    <span className="bg-blue-500 font-semibold text-black px-3 py-1 rounded-full text-xs">Deepseek R1</span>
                                 </div>
                                 <p className="text-sm">
-                                    Thoải mái lựa chọn Mô hình AI để trò chuyện với Gemini 2.0 Flash, Deepseek R1 hay Llama 4 Marverick.
+                                    Thoải mái lựa chọn các phiên bản KayO để trò chuyện với Gemini 2.0 Flash, Deepseek R1 hay Llama 4 Marverick.
                                 </p>
                             </div>
                         </div>
