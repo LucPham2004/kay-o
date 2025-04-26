@@ -9,6 +9,8 @@ export interface UserResponseSchema {
     _id: string;
     username: string;
     email: string;
+    role: string;
+    status: string;
     avatar_url?: string;
     created_at?: string;
     update_at?: string;
