@@ -6,8 +6,6 @@ import { FaPaperPlane } from "react-icons/fa";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-const user_id = '67efef29f0c4127199dd6fb5';
-
 const Home = () => {
     const auth = useAppSelector(state => state.auth);
     const { isDarkMode } = useApp();
@@ -26,18 +24,20 @@ const Home = () => {
         }
     
         try {
-            const createRes = await callCreateConversation({
-                user_id: user_id,
-                name: finalMessage.slice(0, 30),
-            });
-            console.log("create " + JSON.stringify(createRes));
-    
-            const conversationId = createRes._id;
-    
-            sessionStorage.setItem('initialMessage', finalMessage);
-            sessionStorage.setItem('newConv', JSON.stringify(createRes));
-    
-            navigate(`/c/${conversationId}`);
+            if(auth.user?._id) {
+                const createRes = await callCreateConversation({
+                    user_id: auth.user?._id,
+                    name: finalMessage.slice(0, 30),
+                });
+                console.log("create " + JSON.stringify(createRes));
+        
+                const conversationId = createRes._id;
+        
+                sessionStorage.setItem('initialMessage', finalMessage);
+                sessionStorage.setItem('newConv', JSON.stringify(createRes));
+        
+                navigate(`/c/${conversationId}`);
+            }
         } catch (error) {
             console.error("Lỗi khi gửi tin nhắn:", error);
         }
