@@ -129,16 +129,25 @@ const ChatMessage: React.FC<MessageProps> = ({
                             <img className="max-w-full h-auto" {...props} alt={props.alt} />
                         ),
                         table: ({ node, ...props }) => (
-                            <table className="border-collapse border border-gray-500 w-full" {...props} />
+                            <table className="border-collapse w-full shadow-md rounded-lg overflow-hidden" {...props} />
                         ),
                         th: ({ node, ...props }) => (
-                            <th className={`border border-gray-500 ${isDarkMode ? 'bg-[#333537] text-gray-300' : 'bg-gray-200 text-gray-700'}`} {...props} />
+                            <th
+                                className={`px-4 py-3 border border-gray-300 text-sm font-semibold text-center 
+                                ${isDarkMode ? 'bg-[#2f3133] text-gray-200' : 'bg-gray-100 text-gray-800'}`}
+                                {...props}
+                            />
                         ),
                         td: ({ node, ...props }) => (
-                            <td className="border border-gray-500" {...props} />
+                            <td className="px-4 py-2 border border-gray-300 text-sm text-left" {...props} />
                         ),
                         tr: ({ node, ...props }) => (
-                            <tr className="border border-gray-500" {...props} />
+                            <tr
+                                className={`border border-gray-300 
+                                ${isDarkMode ? 'hover:bg-[#3a3b3d] even:bg-[#2c2d2f]' 
+                                    : 'even:bg-gray-50 hover:bg-gray-100'} `}
+                                {...props}
+                            />
                         ),
                     }}
                 >

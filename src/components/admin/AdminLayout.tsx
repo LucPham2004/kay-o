@@ -13,6 +13,7 @@ import {
 } from 'react-icons/tb';
 import { routes } from '@/utils/constant';
 import AccountModal from '../common/AccountModal';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 const AdminLayout: React.FC = () => {
     const { isDarkMode, toggleDarkMode } = useApp();
@@ -37,6 +38,11 @@ const AdminLayout: React.FC = () => {
             path: routes.ADMIN_SETTING,
             icon: <TbSettings className="text-xl" />,
             label: 'Cài đặt',
+        },
+        {
+            path: routes.DEFAULT,
+            icon: <FaExternalLinkAlt />,
+            label: 'Về trang chính',
         },
     ];
 
